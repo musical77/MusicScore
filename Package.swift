@@ -26,11 +26,11 @@ let package = Package(
             name: "MusicScore",
             dependencies: ["MusicSymbol"],
             resources: [
-                .copy("Resource/Score/sample/4tracks.mid"),
-                .copy("Resource/Score/sample/Beethoven_-_Violin_Sonata_No.5_Op.24_Spring_movement_I._Allegro.mid"),
-                .copy("Resource/Score/sample/Salut_dAmour_Loves_Greeting_Op._12.mid"),
-                .copy("Resource/Score/sample/Chopin_-_Nocturne_Op_9_No_2_E_Flat_Major.mid"),
-                .copy("Resource/Score/sample/Sonata_Pathetique.mid"),
+                .copy("Resource/sample/4tracks.mid"),
+                .copy("Resource/sample/Beethoven_-_Violin_Sonata_No.5_Op.24_Spring_movement_I._Allegro.mid"),
+                .copy("Resource/sample/Salut_dAmour_Loves_Greeting_Op._12.mid"),
+                .copy("Resource/sample/Chopin_-_Nocturne_Op_9_No_2_E_Flat_Major.mid"),
+                .copy("Resource/sample/Sonata_Pathetique.mid"),
             ]
         ),
         .testTarget(
