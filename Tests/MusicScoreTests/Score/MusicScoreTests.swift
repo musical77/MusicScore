@@ -183,4 +183,16 @@ measure: 0, [0.0, 3.75), tempo: [0.000, inf) 🎼4/4 bpm:120
         let score = MusicScore(url: ScoreSamples.sample)!
         print(score)
     }
+    
+    /// access measures and notes
+    func testAccessMeasureAndNotes() {
+        let score = MusicScore(url: ScoreSamples.sample)!
+
+        XCTAssertEqual(score.musicParts[0].notes.count, 8)
+        XCTAssertEqual(score.musicParts[0].notes[0].noteName, "A3")
+        XCTAssertEqual(score.musicParts[0].notes[1].noteName, "C4")
+        
+        XCTAssertEqual(score.musicParts[0].measures.count, 1)
+        XCTAssertEqual(score.musicParts[0].measures[0].notes[0].noteName, "A3")
+    }
 }
