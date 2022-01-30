@@ -24,7 +24,15 @@ let package = Package(
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "MusicScore",
-            dependencies: ["MusicSymbol"]),
+            dependencies: ["MusicSymbol"],
+            resources: [
+                .copy("Resource/Score/sample/4tracks.mid"),
+                .copy("Resource/Score/sample/Beethoven_-_Violin_Sonata_No.5_Op.24_Spring_movement_I._Allegro.mid"),
+                .copy("Resource/Score/sample/Salut_dAmour_Loves_Greeting_Op._12.mid"),
+                .copy("Resource/Score/sample/Chopin_-_Nocturne_Op_9_No_2_E_Flat_Major.mid"),
+                .copy("Resource/Score/sample/Sonata_Pathetique.mid"),
+            ]
+        ),
         .testTarget(
             name: "MusicScoreTests",
             dependencies: ["MusicScore"]),
