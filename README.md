@@ -34,25 +34,18 @@ Usage
 
 `MusicScore` supports load a score from mid file.
 
-### Create a MusicScore from sample mid in prepared resouce bundle
+### Create a MusicScore from a sample midf file in embedded resouce bundle
 
 ``` swift
 let score = MusicScore(url: ScoreSamples.sample)!  // 4tracks.mid
 print(score)
 ```
 
-### Create a MusicScore from given mid file url
-
-``` swift
-let url = URL(..) // mid file url
-let score = MusicScore(url: url)
-```
-
 ### Sample MIDI file (4tracks.mid)
 
 ![image](https://user-images.githubusercontent.com/51254187/151688910-43f66c44-678b-488e-afe0-8e58eec4af52.png)
 
-### Sample Output 
+### Sample Output print(score) (4tracks.mid)
 
 ``` txt
 Score: 4tracks.mid
@@ -71,7 +64,7 @@ measure: 0, [0.0, 3.75), tempo: [0.000, inf) 🎼4/4 bpm:120
 
 ### Access Measures and Notes 
 
-```
+``` swift
 func testAccessMeasureAndNotes() {
     let score = MusicScore(url: ScoreSamples.sample)!
 
