@@ -47,6 +47,10 @@ let url = URL(..) // mid file url
 let score = MusicScore(url: url)
 ```
 
+### Sample MIDI file (4tracks.mid)
+
+![image](https://user-images.githubusercontent.com/51254187/151688910-43f66c44-678b-488e-afe0-8e58eec4af52.png)
+
 ### Sample Output 
 
 ``` txt
