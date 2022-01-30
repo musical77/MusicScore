@@ -157,10 +157,10 @@ class MusicScoreTests: XCTestCase {
     }
 
     /// test description
-    func testGetDesc1() {
+    func testGetMusicPartDesc1() {
         let url = ScoreSamples.sample
         let score = MusicScore(url: url)!
-
+        
         XCTAssertEqual(score.musicParts[0].description, """
 meta: 4tracks.mid_0, unknown
 ----------------
@@ -178,4 +178,9 @@ measure: 0, [0.0, 3.75), tempo: [0.000, inf) 🎼4/4 bpm:120
     }
     
 
+    /// test score description
+    func testScoreDesc() {
+        let score = MusicScore(url: ScoreSamples.sample)!
+        print(score)
+    }
 }

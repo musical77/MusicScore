@@ -55,12 +55,12 @@ public struct MusicScore {
     
     private var midi: MIDISequence
     
-    private var logger = Logger(subsystem: "Lively77MusicConductor", category: "MusicScore")
+    private var logger = Logger(subsystem: "MusicScore", category: "MusicScore")
     private var tempoParser = TempoFromMIDIEventParser()
 }
 
 
-// MARK: extension
+// read-only var
 public extension MusicScore {
     ///
     var numberOfMeasures: Int {
@@ -87,7 +87,7 @@ public extension MusicScore {
     }
 }
 
-// MARK:
+/// cut
 public extension MusicScore {
     
     /// 
@@ -95,5 +95,12 @@ public extension MusicScore {
         for idx in 0..<self.musicParts.count {
             musicParts[idx].cut(beginBeat: beginBeat, endBeat: endBeat)
         }
+    }
+}
+
+/// string ext
+extension MusicScore: CustomStringConvertible {
+    public var description: String {
+        return "Score: \(name)\n" + musicParts.map { $0.description }.reduce("", +)
     }
 }

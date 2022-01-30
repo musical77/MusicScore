@@ -33,8 +33,8 @@ public struct MusicPart {
         return notes.map { $0.beginBeat + $0.beats }.max() ?? 0
     }
     
-    // MARK: private
-    private var logger = Logger(subsystem: "Lively77MusicScore", category: "MusicPart")
+    /// private
+    private var logger = Logger(subsystem: "MusicScore", category: "MusicPart")
     private var metaParser = MusicPartMetaFromMIDIEventParser()
 }
 
