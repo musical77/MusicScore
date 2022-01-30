@@ -4,7 +4,7 @@
 
 A music score library with `MusicPart`, `Measure`, `Note`, `Pitch` and `Tempo` representations in swift structs.
 
-Support read music score from MID file. 
+Support read music score from MIDI file. 
 
 Requirements
 ----
@@ -67,4 +67,19 @@ measure: 0, [0.0, 3.75), tempo: [0.000, inf) 🎼4/4 bpm:120
 [2.500-2.750) 🎵C4 1/16 beats:0.250 duration:0.125 ⬇️98 ⬆️64
 [3.000-3.250) 🎵D4 1/16 beats:0.250 duration:0.125 ⬇️98 ⬆️64
 [3.500-3.750) 🎵E4 1/16 beats:0.250 duration:0.125 ⬇️98 ⬆️64
+```
+
+### Access Measures and Notes 
+
+```
+func testAccessMeasureAndNotes() {
+    let score = MusicScore(url: ScoreSamples.sample)!
+
+    XCTAssertEqual(score.musicParts[0].notes.count, 8)
+    XCTAssertEqual(score.musicParts[0].notes[0].noteName, "A3")
+    XCTAssertEqual(score.musicParts[0].notes[1].noteName, "C4")
+        
+    XCTAssertEqual(score.musicParts[0].measures.count, 1)
+    XCTAssertEqual(score.musicParts[0].measures[0].notes[0].noteName, "A3")
+}
 ```
