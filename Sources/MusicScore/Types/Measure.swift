@@ -38,7 +38,7 @@ extension Measure {
 extension Measure: CustomStringConvertible {
     public var description: String {
         var result = "measure: \(index), [\(beginBeat), \(endBeat)), tempo: \(tempo)\n"
-        result = result + notes.map { $0.description + "\n" }.reduce("", +)
+        result = result + notes.map { $0.description }.joined(separator: "\n")
         return result
     }
 }

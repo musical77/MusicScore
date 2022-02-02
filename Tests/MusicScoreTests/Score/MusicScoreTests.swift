@@ -10,21 +10,7 @@ class MusicScoreTests: XCTestCase {
     
     /// test read music score basic info
     func testScoreLoad1() {
-        let url = ScoreSamples.sample
-        let score = MusicScore(url: url)!
-        
-        XCTAssertEqual(score.musicParts.count, 1)
-        
-        XCTAssertEqual(score.tempos[0].timeSignature.beats, 4)
-        XCTAssertEqual(score.tempos[0].timeSignature.noteTimeValue, .quarter)
-        XCTAssertEqual(score.tempos[0].bpm, 120)
-        XCTAssertEqual(score.tempos[0].durationPerBeat, 0.5)
-    }
-    
-    /// test read music score basic info
-    func testScoreLoad2() {
-        let url = ScoreSamples.spring1st
-        let score = MusicScore(url: url)!
+        let score = ScoreSamples.spring1st
 
         /// voice part
         XCTAssertEqual(score.musicParts.count, 2)
@@ -36,9 +22,8 @@ class MusicScoreTests: XCTestCase {
     }
     
     /// test read music score basic info
-    func testScoreLoad3() {
-        let url = ScoreSamples.chopin92
-        let score = MusicScore(url: url)!
+    func testScoreLoad2() {
+        let score = ScoreSamples.chopin92
         
         XCTAssertEqual(score.musicParts.count, 1)
         XCTAssertNotNil(score.musicPartOf(instrument: .piano))
@@ -57,9 +42,8 @@ class MusicScoreTests: XCTestCase {
     }
     
     /// test read music score basic info
-    func testScoreLoad4() {
-        let url = ScoreSamples.Sonata_Pathetique
-        let score = MusicScore(url: url)!
+    func testScoreLoad3() {
+        let score = ScoreSamples.sonataPathetique
         
         XCTAssertEqual(score.musicParts.count, 1)
         XCTAssertNotNil(score.musicPartOf(instrument: .piano))
@@ -69,26 +53,10 @@ class MusicScoreTests: XCTestCase {
         
         print(pianoPart.measures[0])
     }
-
-    /// test read music score , note is correct ?
-    func testReadNoteName1() {
-        let url = ScoreSamples.sample
-        let score = MusicScore(url: url)!
-
-        // 6 1 2 3, first track is only A
-        XCTAssertEqual(score.musicParts[0].notes.count, 8)
-        XCTAssertEqual(score.musicParts[0].notes[0].noteName, "A3")
-        XCTAssertEqual(score.musicParts[0].notes[1].noteName, "C4")
-        XCTAssertEqual(score.musicParts[0].notes[2].noteName, "D4")
-        XCTAssertEqual(score.musicParts[0].notes[3].noteName, "E4")
-
-        XCTAssertEqual(score.musicParts[0].notes[0].phyDuration, 0.125)
-    }
     
     /// test read music score , note name is correct?
-    func testReadNoteName2() {
-        let url = ScoreSamples.spring1st
-        let score = MusicScore(url: url)!
+    func testReadNoteName1() {
+        let score = ScoreSamples.spring1st
 
         // mi in F major, first note , A6
         XCTAssertEqual(score.musicParts[0].notes.count, 1856)
@@ -98,22 +66,10 @@ class MusicScoreTests: XCTestCase {
 
         XCTAssertEqual(score.musicParts[0].notes[0].beats, 2)
     }
-
-    /// test read measures
-    func testGetMeasures1() {
-        let url = ScoreSamples.sample
-        let score = MusicScore(url: url)!
-
-        XCTAssertEqual(score.musicParts[0].measures.count, 1)
-        XCTAssertEqual(score.numberOfMeasures, 1)
-        
-        print(score.musicParts[0].measures[0])
-    }
     
     /// test read measures
-    func testGetMeasures2() {
-        let url = ScoreSamples.spring1st
-        let score = MusicScore(url: url)!
+    func testGetMeasures1() {
+        let score = ScoreSamples.spring1st
 
         XCTAssertEqual(score.musicParts[0].measures.count, 332)
         XCTAssertEqual(score.musicParts[1].measures.count, 332)
@@ -122,9 +78,8 @@ class MusicScoreTests: XCTestCase {
     }
     
     /// test read measures
-    func testGetMeasures3() {
-        let url = ScoreSamples.chopin92
-        let score = MusicScore(url: url)!
+    func testGetMeasures2() {
+        let score = ScoreSamples.chopin92
         
         print(score.numberOfMeasures)
         
@@ -134,8 +89,7 @@ class MusicScoreTests: XCTestCase {
     
     /// test music part subscript
     func testMusicPartSubscript() {
-        let url = ScoreSamples.Sonata_Pathetique
-        let score = MusicScore(url: url)!
+        let score = ScoreSamples.sonataPathetique
         
         let part = score.musicPartOf(instrument: .piano)!
         
@@ -147,8 +101,7 @@ class MusicScoreTests: XCTestCase {
     
     /// test music score subscript
     func testMusicPartSubscript2() {
-        let url = ScoreSamples.Sonata_Pathetique
-        let score = MusicScore(url: url)!
+        let score = ScoreSamples.sonataPathetique
         
         let part = score.musicPartOf(instrument: .piano)!
         
@@ -158,41 +111,43 @@ class MusicScoreTests: XCTestCase {
 
     /// test description
     func testGetMusicPartDesc1() {
-        let url = ScoreSamples.sample
-        let score = MusicScore(url: url)!
+        let score = ScoreSamples.chopin92
         
-        XCTAssertEqual(score.musicParts[0].description, """
-meta: 4tracks.mid_0, unknown
-----------------
-measure: 0, [0.0, 3.75), tempo: [0.000, inf) 🎼4/4 bpm:120
-[0.000-0.250) 🎵A3 1/16 beats:0.250 duration:0.125 ⬇️98 ⬆️64
-[0.500-0.750) 🎵C4 1/16 beats:0.250 duration:0.125 ⬇️98 ⬆️64
-[1.000-1.250) 🎵D4 1/16 beats:0.250 duration:0.125 ⬇️98 ⬆️64
-[1.500-1.750) 🎵E4 1/16 beats:0.250 duration:0.125 ⬇️98 ⬆️64
-[2.000-2.250) 🎵A3 1/16 beats:0.250 duration:0.125 ⬇️98 ⬆️64
-[2.500-2.750) 🎵C4 1/16 beats:0.250 duration:0.125 ⬇️98 ⬆️64
-[3.000-3.250) 🎵D4 1/16 beats:0.250 duration:0.125 ⬇️98 ⬆️64
-[3.500-3.750) 🎵E4 1/16 beats:0.250 duration:0.125 ⬇️98 ⬆️64
-
+        XCTAssertEqual(score.musicParts[0].measures[0].description, """
+measure: 0, [0.0, 0.5), tempo: [0.000, 0.500) 🎼1/8 bpm:60
+[0.000-0.500) 🎵A♯4 1/16 beats:0.500 duration:0.500 ⬇️65 ⬆️0
 """)
+        
+        print("#musicParts: ", score.musicParts.count)
+        XCTAssertEqual(score.musicParts.count, 1)
+        
+        print("first note: ", score.musicParts[0].measures[0].notes[0])
+        XCTAssertEqual(score.musicParts[0].measures[0].notes[0].pitch, "A#4")
+        XCTAssertEqual(score.musicParts[0].measures[0].notes.count, 1)
+        
+        print("first measure: ", score.musicParts[0].measures[1])
+        XCTAssertEqual(score.musicParts[0].measures[1].notes.count, 64)
     }
     
+    func testGetMusicPartDesc2() {
+        let score = ScoreSamples.spring1st
+        
+        let pianoPart = score.musicPartOf(instrument: .piano)!
+        let violinPart = score.musicPartOf(instrument: .violin)!
+        
+        print("first measure of the violin part: ", violinPart.measures[0])
+        print("first measure of piano part: ", pianoPart.measures[0])
+        print("first note in violin part: ", violinPart.measures[0].notes[0])
+    }
+    
+    func testScoreLoadFromURL() {
+        let score = MusicScore(url: ScoreSamples.url_spring1st)!
+        print(score)
+    }
 
     /// test score description
     func testScoreDesc() {
-        let score = MusicScore(url: ScoreSamples.sample)!
+        let score = ScoreSamples.chopin92
         print(score)
-    }
-    
-    /// access measures and notes
-    func testAccessMeasureAndNotes() {
-        let score = MusicScore(url: ScoreSamples.sample)!
-
-        XCTAssertEqual(score.musicParts[0].notes.count, 8)
-        XCTAssertEqual(score.musicParts[0].notes[0].noteName, "A3")
-        XCTAssertEqual(score.musicParts[0].notes[1].noteName, "C4")
-        
-        XCTAssertEqual(score.musicParts[0].measures.count, 1)
-        XCTAssertEqual(score.musicParts[0].measures[0].notes[0].noteName, "A3")
     }
 }

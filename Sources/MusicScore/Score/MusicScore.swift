@@ -101,6 +101,6 @@ public extension MusicScore {
 /// string ext
 extension MusicScore: CustomStringConvertible {
     public var description: String {
-        return "Score: \(name)\n" + musicParts.map { $0.description }.reduce("", +)
+        return "Score: \(name)\n" + musicParts.map { $0.description }.joined(separator: "\n")
     }
 }

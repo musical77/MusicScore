@@ -156,7 +156,7 @@ extension MusicPart {
 // MARK: string ext
 extension MusicPart: CustomStringConvertible {
     public var description: String {
-        return "meta: \(meta)\n" + measures.map { "----------------" + "\n" + $0.description }.reduce("", +)
+        return "MusicPart: \(meta)\n" + measures.map { "----------------" + "\n" + $0.description }.joined(separator: "\n")
     }
 }
 

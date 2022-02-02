@@ -9,8 +9,7 @@ import MusicScore
 class BaseTypesTests: XCTestCase {
     
     func testMeasureSubscript() {
-        let url = ScoreSamples.Sonata_Pathetique
-        let score = MusicScore(url: url)!
+        let score = ScoreSamples.sonataPathetique
         let measure = score.musicPartOf(instrument: .piano)![0]
         
         XCTAssertEqual(measure.beats, 2)
