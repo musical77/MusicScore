@@ -5,7 +5,7 @@
 import Foundation
 import MusicSymbol
 
-/// tempo  [beginBeat, endBeat)
+/// tempo  [beginBeat, endBeat),  with a fixed tempo , and bpm changes
 public struct TempoInScore {
     
     public init(tempo: Tempo,
@@ -17,45 +17,36 @@ public struct TempoInScore {
         self.innerBPM = innerBPM
     }
     
-    ///
-    private var tempo: Tempo
+    /// tempo
+    public var tempo: Tempo
 
-    ///
+    /// begin beat of this tempo affected
     public var beginBeat: MusicTimeStamp
     
-    ///
+    /// end beat of this tempo
     public var endBeat: MusicTimeStamp
     
-    ///
+    /// inner beat per minute changes in this tempo
     public var innerBPM: [(MusicTimeStamp, Float64)] = []
     
 }
 
 extension TempoInScore {
-    ///
+    
+    /// time signature
     public var timeSignature: TimeSignature {
         return tempo.timeSignature
     }
     
-    public var bpm: Double {
-        return tempo.bpm
-    }
-    
-    /// Caluclates the duration of a note value in seconds.
-    public func duration(of noteValue: NoteTimeValue) -> PhysicalDuration {
-        return tempo.duration(of: noteValue)
-    }
-    
-    public func duration(of note: Note) -> PhysicalDuration {
-        return tempo.duration(of: note)
-    }
-    
-    public var durationPerBeat: PhysicalDuration {
-        return tempo.durationPerBeat
-    }
-    
-    public func beats(of note: Note) -> MusicDuration {
-        return tempo.beats(of: note)
+    /// return tempo at given music timestamp
+    public func getTempo(at beat: MusicTimeStamp) -> Tempo {
+        var result = tempo
+        for bpm in innerBPM {
+            if beat >= bpm.0 {
+                result.bpm = bpm.1
+            }
+        }
+        return result
     }
 }
 
@@ -80,9 +71,10 @@ extension Double {
 }
 
 extension TempoInScore: CustomStringConvertible {
+    /// [0.000, inf) 🎼4/4 bpm:120 
     public var description: String {
         return "[\(beginBeat.as3DigitString), \(endBeat.as3DigitString)) \(tempo)" + (innerBPM.count > 1 ?
-        " " + innerBPM.map { "\($0.0.as3DigitString) bpm: \(Int($0.1))" }.joined(separator: " ") : "")
+        " " + innerBPM.map { "(\($0.0.as3DigitString) bpm: \(Int($0.1)))"}.joined(separator: ",") : "")
     }
 }
 

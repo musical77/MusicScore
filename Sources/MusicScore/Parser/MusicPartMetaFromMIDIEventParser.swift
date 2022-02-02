@@ -28,9 +28,9 @@ class MusicPartMetaFromMIDIEventParser {
     func getInstrument(midiEvents: [TimedMIDIEvent]) -> InstrumentType {
         for event in midiEvents {
             if let channelMessage = event.midiChannelMessage {
-                logger.info("\(event.eventTimeStamp.asMusicTimeDescription), status: \(channelMessage.status)")
+//                logger.debug("\(event.eventTimeStamp.asMusicTimeDescription), status: \(channelMessage.status)")
                 if let programNumber = channelMessage.programChange {
-                    logger.info("\(event.eventTimeStamp.asMusicTimeDescription), found instrument: \(programNumber)")
+//                    logger.debug("\(event.eventTimeStamp.asMusicTimeDescription), found instrument: \(programNumber)")
                     return InstrumentType(programNumber: programNumber)
                 }
                 

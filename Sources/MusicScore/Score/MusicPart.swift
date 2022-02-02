@@ -79,9 +79,10 @@ extension MusicPart {
         var notes: [NoteInScore] = []
         for event in midiEvents {
             if let midiNote = event.midiNoteMessage {
+                // get tempo of this note
                 let tempo = MusicPart.getTempo(ts: event.eventTimeStamp, with: tempos)!
                 
-                //
+                // midiNote.duration is beats this note lasts
                 let timeValue = tempo.timeSignature.noteTimeValue * Double(midiNote.duration)
                 let note = Note(pitch: Pitch(integerLiteral: Int(midiNote.note)),
                                 timeValue: timeValue!)
@@ -106,10 +107,10 @@ extension MusicPart {
 extension MusicPart {
     
     /// get tempo
-    private static func getTempo(ts: MusicTimeStamp, with tempos: [TempoInScore]) -> TempoInScore? {
+    private static func getTempo(ts: MusicTimeStamp, with tempos: [TempoInScore]) -> Tempo? {
         for tempo in tempos {
             if ts >= tempo.beginBeat && ts < tempo.endBeat {
-                return tempo
+                return tempo.getTempo(at: ts)
             }
         }
         return nil
@@ -126,7 +127,7 @@ extension MusicPart {
             let beginBeat = tempo.beginBeat
             let endBeat = min(maxBeat, tempo.endBeat)
             
-            let beatPerMeasure = Double(tempo.timeSignature.beats)
+            let beatPerMeasure = Double(tempo.tempo.timeSignature.beats)
             var newBeatBegin = beginBeat
             while newBeatBegin < endBeat - 1e-6 {
                 measures.append(Measure(index: idx, notes: [],

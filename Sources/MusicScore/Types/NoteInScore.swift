@@ -5,10 +5,10 @@
 import Foundation
 import MusicSymbol
 
-///
+/// represent a note in score , has its position info(beginBeat) , and its performance info(press and release velocity)
 public struct NoteInScore {
     
-    public init(note: Note, tempo: TempoInScore,
+    public init(note: Note, tempo: Tempo,
                 pressVelocity: UInt8, releaseVelocity: UInt8,
                 beginBeat: MusicTimeStamp) {
         self.note = note
@@ -21,8 +21,8 @@ public struct NoteInScore {
     /// note
     public var note: Note
     
-    /// tempo
-    public var tempo: TempoInScore
+    /// tempo of this note being played
+    public var tempo: Tempo
 
     /// press velocity
     public var pressVelocity: UInt8

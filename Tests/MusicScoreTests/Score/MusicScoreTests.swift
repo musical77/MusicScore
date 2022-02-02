@@ -12,11 +12,13 @@ class MusicScoreTests: XCTestCase {
     func testScoreLoad1() {
         let score = ScoreSamples.spring1st
 
-        /// voice part
+        /// music part
         XCTAssertEqual(score.musicParts.count, 2)
         XCTAssertNotNil(score.musicPartOf(instrument: .piano))
         XCTAssertNotNil(score.musicPartOf(instrument: .violin))
 
+        /// tempo changes
+        XCTAssertEqual(score.tempos.count, 1)
         XCTAssertEqual(score.tempos[0].timeSignature.beats, 4)
         XCTAssertEqual(score.tempos[0].timeSignature.noteTimeValue, .quarter)
     }
@@ -129,8 +131,10 @@ measure: 0, [0.0, 0.5), tempo: [0.000, 0.500) 🎼1/8 bpm:60
         XCTAssertEqual(score.musicParts[0].measures[1].notes.count, 64)
     }
     
-    func testGetMusicPartDesc2() {
+    func testSpring1stCorrectness() {
         let score = ScoreSamples.spring1st
+        
+        XCTAssertEqual(score.musicParts.count, 2)
         
         let pianoPart = score.musicPartOf(instrument: .piano)!
         let violinPart = score.musicPartOf(instrument: .violin)!
@@ -138,6 +142,8 @@ measure: 0, [0.0, 0.5), tempo: [0.000, 0.500) 🎼1/8 bpm:60
         print("first measure of the violin part: ", violinPart.measures[0])
         print("first measure of piano part: ", pianoPart.measures[0])
         print("first note in violin part: ", violinPart.measures[0].notes[0])
+        
+        print(score)
     }
     
     func testScoreLoadFromURL() {

@@ -28,13 +28,13 @@ public struct MusicScore {
         self.midi = midi
         logger.info("\(url.description) music sound tracks without meta: \(midi.getNumberOfSoundTracks())")
 
-        //
-        self.tempos = tempoParser.getTempo(midi)
-        for t in tempos {
-            logger.info("tempo: \(t)")
+        // extract tempos
+        self.tempos = tempoParser.getTempoInScores(midi)
+        for tempo in tempos {
+            logger.info("tempo: \(tempo)")
         }
 
-        //
+        // extract music parts
         for idx in 0..<(midi.getNumberOfSoundTracks()) {
             let events = midi.getTrackEvents(trackIndex: idx)
             let part = MusicPart(id: MusicPartID(idx), named: self.name + "_\(idx)",
@@ -62,14 +62,14 @@ public struct MusicScore {
 
 // read-only var
 public extension MusicScore {
-    ///
+    
     var numberOfMeasures: Int {
         get {
             return musicParts.map { $0.measures.count }.max() ?? 0
         }
     }
     
-    ///
+    
     func musicPartOf(instrument: InstrumentType) -> MusicPart? {
         for part in musicParts {
             if part.meta.instrument == instrument {
@@ -79,7 +79,7 @@ public extension MusicScore {
         return nil
     }
     
-    ///
+    
     var duration: MusicDuration {
         get {
             return musicParts.map { $0.musicDuration }.max() ?? 0

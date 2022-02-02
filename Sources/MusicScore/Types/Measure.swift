@@ -3,6 +3,13 @@ import MusicSymbol
 
 ///（measure/bar）
 public struct Measure {
+    public init(index: Int, notes: [NoteInScore], beginBeat: MusicTimeStamp, endBeat: MusicTimeStamp, tempo: TempoInScore) {
+        self.index = index
+        self.notes = notes
+        self.beginBeat = beginBeat
+        self.endBeat = endBeat
+        self.tempo = tempo
+    }
 
     ///
     public let index: Int
@@ -23,7 +30,7 @@ public struct Measure {
 /// 
 extension Measure {
     public var beats: Int {
-        return tempo.timeSignature.beats
+        return Int(endBeat - beginBeat + 1e-6)
     }
     
     public subscript(idx: Int) -> [NoteInScore] {
