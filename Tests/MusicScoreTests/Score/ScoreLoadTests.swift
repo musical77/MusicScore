@@ -18,9 +18,8 @@ class ScoreLoadTests: XCTestCase {
         XCTAssertNotNil(score.musicPartOf(instrument: .violin))
 
         /// tempo changes
-//        XCTAssertEqual(score.tempos.count, 1)
-//        XCTAssertEqual(score.tempos[0].timeSignature.beats, 4)
-//        XCTAssertEqual(score.tempos[0].timeSignature.noteTimeValue, .quarter)
+        XCTAssertEqual(score.musicParts[0].notes[0].tempo.timeSignature.beats, 4)
+        XCTAssertEqual(score.musicParts[0].notes[0].tempo.timeSignature.noteTimeValue, .quarter)
     }
     
     /// test read music score basic info
@@ -30,17 +29,11 @@ class ScoreLoadTests: XCTestCase {
         XCTAssertEqual(score.musicParts.count, 1)
         XCTAssertNotNil(score.musicPartOf(instrument: .piano))
         
-//        XCTAssertEqual(score.tempos[0].timeSignature.beats, 1)
-//        XCTAssertEqual(score.tempos[0].timeSignature.noteTimeValue, .eighth)
-//
-//        XCTAssertEqual(score.tempos[1].timeSignature.beats, 12)
-//        XCTAssertEqual(score.tempos[1].timeSignature.noteTimeValue, .eighth)
-//        XCTAssertEqual(score.tempos[1].beginBeat, 0.5)
+        XCTAssertEqual(score.musicParts[0].notes[0].tempo.timeSignature.beats, 1)
+        XCTAssertEqual(score.musicParts[0].notes[0].tempo.timeSignature.noteTimeValue, .eighth)
         
-        // tempo
-//        for idx in 0..<score.tempos.count - 1 {
-//            XCTAssertEqual(score.tempos[idx].endBeat, score.tempos[idx + 1].beginBeat)
-//        }
+        XCTAssertEqual(score.musicParts[0].notes[1].tempo.timeSignature.beats, 12)
+        XCTAssertEqual(score.musicParts[0].notes[1].tempo.timeSignature.noteTimeValue, .eighth)
     }
     
     /// test read music score basic info
