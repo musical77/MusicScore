@@ -34,45 +34,61 @@ Usage
 
 `MusicScore` supports load a score from mid file.
 
-### Create a MusicScore from a sample midf file in embedded resouce bundle
+### Get a MusicScore from a MID file URL 
 
 ``` swift
-let score = MusicScore(url: ScoreSamples.sample)!  // 4tracks.mid
+let score = MusicScore(url: ScoreSamples.url_spring1st)!
 print(score)
 ```
 
-### Sample MIDI file (4tracks.mid)
+### Access MusicPart, Measures and Notes
 
-![image](https://user-images.githubusercontent.com/51254187/151688910-43f66c44-678b-488e-afe0-8e58eec4af52.png)
+``` swift 
+let score = ScoreSamples.spring1st  // get a sample from embedded resource
+        
+let pianoPart = score.musicPartOf(instrument: .piano)!
+let violinPart = score.musicPartOf(instrument: .violin)!
+        
+print("first measure of the violin part: ", violinPart.measures[0])
+print("first measure of piano part: ", pianoPart.measures[0])
+print("first note in violin part: ", violinPart.measures[0].notes[0])
+```
 
-### Sample Output print(score) (4tracks.mid)
+### Console Output 
 
 ``` txt
-Score: 4tracks.mid
-meta: 4tracks.mid_0, instrument: unknown
-----------------
-measure: 0, [0.0, 3.75), tempo: [0.000, inf) 🎼4/4 bpm:120
-[0.000-0.250) 🎵A3 1/16 beats:0.250 duration:0.125 ⬇️98 ⬆️64
-[0.500-0.750) 🎵C4 1/16 beats:0.250 duration:0.125 ⬇️98 ⬆️64
-[1.000-1.250) 🎵D4 1/16 beats:0.250 duration:0.125 ⬇️98 ⬆️64
-[1.500-1.750) 🎵E4 1/16 beats:0.250 duration:0.125 ⬇️98 ⬆️64
-[2.000-2.250) 🎵A3 1/16 beats:0.250 duration:0.125 ⬇️98 ⬆️64
-[2.500-2.750) 🎵C4 1/16 beats:0.250 duration:0.125 ⬇️98 ⬆️64
-[3.000-3.250) 🎵D4 1/16 beats:0.250 duration:0.125 ⬇️98 ⬆️64
-[3.500-3.750) 🎵E4 1/16 beats:0.250 duration:0.125 ⬇️98 ⬆️64
+first measure of the violin part:  measure: 0, [0.0, 4.0), tempo: [0.000, inf) 🎼4/4 bpm:120
+[0.000-2.000) 🎵A5 1/2 beats:2.000 duration:1.000 ⬇️80 ⬆️0
+[2.000-2.250) 🎵G5 1/16 beats:0.250 duration:0.125 ⬇️80 ⬆️0
+[2.250-2.500) 🎵F5 1/16 beats:0.250 duration:0.125 ⬇️80 ⬆️0
+[2.500-2.750) 🎵E5 1/16 beats:0.250 duration:0.125 ⬇️80 ⬆️0
+[2.750-3.000) 🎵F5 1/16 beats:0.250 duration:0.125 ⬇️80 ⬆️0
+[3.000-3.250) 🎵G5 1/16 beats:0.250 duration:0.125 ⬇️80 ⬆️0
+[3.250-3.500) 🎵F5 1/16 beats:0.250 duration:0.125 ⬇️80 ⬆️0
+[3.500-3.750) 🎵E5 1/16 beats:0.250 duration:0.125 ⬇️80 ⬆️0
+[3.750-4.000) 🎵D5 1/16 beats:0.250 duration:0.125 ⬇️80 ⬆️0
+
+first measure of piano part:  measure: 0, [0.0, 4.0), tempo: [0.000, inf) 🎼4/4 bpm:120
+[0.000-0.500) 🎵A3 1/8 beats:0.500 duration:0.250 ⬇️80 ⬆️0
+[0.000-4.000) 🎵F2 1 beats:4.000 duration:2.000 ⬇️80 ⬆️0
+[0.500-1.000) 🎵C4 1/8 beats:0.500 duration:0.250 ⬇️80 ⬆️0
+[1.000-1.500) 🎵F4 1/8 beats:0.500 duration:0.250 ⬇️80 ⬆️0
+[1.500-2.000) 🎵C4 1/8 beats:0.500 duration:0.250 ⬇️80 ⬆️0
+[2.000-2.500) 🎵A3 1/8 beats:0.500 duration:0.250 ⬇️80 ⬆️0
+[2.500-3.000) 🎵C4 1/8 beats:0.500 duration:0.250 ⬇️80 ⬆️0
+[3.000-3.500) 🎵F4 1/8 beats:0.500 duration:0.250 ⬇️80 ⬆️0
+[3.500-4.000) 🎵C4 1/8 beats:0.500 duration:0.250 ⬇️80 ⬆️0
+
+first note in violin part:  [0.000-2.000) 🎵A5 1/2 beats:2.000 duration:1.000 ⬇️80 ⬆️0
 ```
 
-### Access Measures and Notes 
+### ScoreSamples.spring1st
 
-``` swift
-func testAccessMeasureAndNotes() {
-    let score = MusicScore(url: ScoreSamples.sample)!
+`ScoreSamples.spring1st` is a MusicScore of Beethoven Violin Sonata No.5 Op.24 Spring movement I Allegro.
+Here shows the first 2 measures of this masterpiece.
 
-    XCTAssertEqual(score.musicParts[0].notes.count, 8)
-    XCTAssertEqual(score.musicParts[0].notes[0].noteName, "A3")
-    XCTAssertEqual(score.musicParts[0].notes[1].noteName, "C4")
-        
-    XCTAssertEqual(score.musicParts[0].measures.count, 1)
-    XCTAssertEqual(score.musicParts[0].measures[0].notes[0].noteName, "A3")
-}
-```
+
+<img width="644" alt="截屏2022-02-02 下午5 46 22" src="https://user-images.githubusercontent.com/51254187/152130287-c7873c82-c2e6-431a-b6ff-d13afb1d9fdc.png">
+
+
+
