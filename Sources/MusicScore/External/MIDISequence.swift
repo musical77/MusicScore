@@ -22,8 +22,8 @@ class MIDISequence {
         /// If this flag is set the resultant Sequence will contain a tempo track,
         /// 1 track for each MIDI Channel that is found in the SMF, 1 track for SysEx or MetaEvents -
         /// and this will be the last track in the sequence after the LoadSMFWithFlags calls.
-        let flags = MusicSequenceLoadFlags.smf_ChannelsToTracks /// 将每个channel转成track
-        let typeid = MusicSequenceFileTypeID.midiType  /// 假设url对应的是midi文件
+        let flags = MusicSequenceLoadFlags.smf_ChannelsToTracks ///
+        let typeid = MusicSequenceFileTypeID.midiType  /// 
         let status = MusicSequenceFileLoad(musicSequence!, url as CFURL, typeid, flags)
         
         if status != OSStatus(noErr) {

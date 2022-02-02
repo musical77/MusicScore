@@ -1,37 +1,37 @@
 //
-//  TempoInScore.swift
+//  TempoChange.swift
 //  
 
 import Foundation
 import MusicSymbol
 
 /// tempo  [beginBeat, endBeat),  with a fixed tempo , and bpm changes
-public struct TempoInScore {
+public struct TempoEvent {
     
     public init(tempo: Tempo,
-                beginBeat: MusicTimeStamp, endBeat: MusicTimeStamp,
-                innerBPM: [(MusicTimeStamp, Float64)] = []) {
+                begin: MusicTimeStampOfQuarters, end: MusicTimeStampOfQuarters,
+                innerBPM: [(MusicTimeStampOfQuarters, Float64)] = []) {
         self.tempo = tempo
-        self.beginBeat = beginBeat
-        self.endBeat = endBeat
+        self.begin = begin
+        self.end = end
         self.innerBPM = innerBPM
     }
     
     /// tempo
     public var tempo: Tempo
 
-    /// begin beat of this tempo affected
-    public var beginBeat: MusicTimeStamp
+    /// begin timestamp of this tempo affected
+    public var begin: MusicTimeStampOfQuarters
     
-    /// end beat of this tempo
-    public var endBeat: MusicTimeStamp
+    /// end timestamp of this tempo
+    public var end: MusicTimeStampOfQuarters
     
     /// inner beat per minute changes in this tempo
-    public var innerBPM: [(MusicTimeStamp, Float64)] = []
+    public var innerBPM: [(MusicTimeStampOfQuarters, Float64)] = []
     
 }
 
-extension TempoInScore {
+extension TempoEvent {
     
     /// time signature
     public var timeSignature: TimeSignature {
@@ -70,10 +70,10 @@ extension Double {
     }
 }
 
-extension TempoInScore: CustomStringConvertible {
+extension TempoEvent: CustomStringConvertible {
     /// [0.000, inf) 🎼4/4 bpm:120 
     public var description: String {
-        return "[\(beginBeat.as3DigitString), \(endBeat.as3DigitString)) \(tempo)" + (innerBPM.count > 1 ?
+        return "[\(begin.as3DigitString), \(end.as3DigitString)) \(tempo)" + (innerBPM.count > 1 ?
         " " + innerBPM.map { "(\($0.0.as3DigitString) bpm: \(Int($0.1)))"}.joined(separator: ",") : "")
     }
 }

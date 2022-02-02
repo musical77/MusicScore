@@ -2,12 +2,14 @@
 import Foundation
 import AudioToolbox
 
+public typealias MusicTimeStampOfQuarters = Float64
+
 /// Trying to ease the pain of uaing Core Audio.
 /// midi event
 struct TimedMIDIEvent {
     
     var eventType: MusicEventType
-    var eventTimeStamp: MusicTimeStamp
+    var eventTimeStamp: MusicTimeStampOfQuarters
     
     /// midi note
     var midiNoteMessage: MIDINoteMessage? = nil

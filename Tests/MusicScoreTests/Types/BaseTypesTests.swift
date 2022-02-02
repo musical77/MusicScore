@@ -10,11 +10,15 @@ class BaseTypesTests: XCTestCase {
     
     func testMeasureSubscript() {
         let score = ScoreSamples.sonataPathetique
-        let measure = score.musicPartOf(instrument: .piano)![0]
+        let pianoPart = score.musicPartOf(instrument: .piano)!
+        let measure0 = pianoPart[0]
         
-        XCTAssertEqual(measure.beats, 2)
-        XCTAssertEqual(measure[0].count, 6)
-        XCTAssertEqual(measure[1].count, 6)
-        XCTAssertEqual(measure[2].count, 0)
+        XCTAssertEqual(measure0.beats, 2)
+        
+        print(measure0)
+        
+        XCTAssertEqual(measure0[0].count, 6)
+        XCTAssertEqual(measure0[1].count, 6)
+        XCTAssertEqual(measure0[2].count, 0)
     }
 }

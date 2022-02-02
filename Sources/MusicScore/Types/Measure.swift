@@ -3,12 +3,11 @@ import MusicSymbol
 
 ///（measure/bar）
 public struct Measure {
-    public init(index: Int, notes: [NoteInScore], beginBeat: MusicTimeStamp, endBeat: MusicTimeStamp, tempo: TempoInScore) {
+    public init(index: Int, notes: [NoteInScore], beginBeat: MusicTimeStamp, endBeat: MusicTimeStamp) {
         self.index = index
         self.notes = notes
         self.beginBeat = beginBeat
         self.endBeat = endBeat
-        self.tempo = tempo
     }
 
     ///
@@ -22,9 +21,6 @@ public struct Measure {
     
     /// end beat of this measure(not including)
     public let endBeat: MusicTimeStamp
-    
-    /// tempo
-    public let tempo: TempoInScore
 }
 
 /// 
@@ -33,6 +29,7 @@ extension Measure {
         return Int(endBeat - beginBeat + 1e-6)
     }
     
+    /// return notes in idx beat in this measure
     public subscript(idx: Int) -> [NoteInScore] {
         let localBeginBeat = beginBeat + Double(idx)
         let localEndBeat = localBeginBeat + 1
@@ -44,7 +41,7 @@ extension Measure {
 
 extension Measure: CustomStringConvertible {
     public var description: String {
-        var result = "measure: \(index), [\(beginBeat), \(endBeat)), tempo: \(tempo)\n"
+        var result = "measure: \(index), [\(beginBeat), \(endBeat))\n"
         result = result + notes.map { $0.description }.joined(separator: "\n")
         return result
     }

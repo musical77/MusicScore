@@ -4,11 +4,11 @@ import Foundation
 import MusicSymbol
 import AudioToolbox
 
-/// TempoFromMIDIEventParser
-class TempoFromMIDIEventParser {
+/// TempoEventParser
+class TempoEventParser {
     
     /// extract tempo infos from MIDISequence
-    func getTempoInScores(_ midi: MIDISequence) -> [TempoInScore] {
+    func getTempoInScores(_ midi: MIDISequence) -> [TempoEvent] {
         let tempoEvents = midi.getTempoTrackEvents()
         
         // get bmp changes and signuature changes, sort in asc order
@@ -22,11 +22,11 @@ class TempoFromMIDIEventParser {
         ts.sort()
         
         // for each [ts[i], ts[i + 1]) , calculate its bmp and time signature
-        var tmpResults: [TempoInScore] = []
+        var tmpResults: [TempoEvent] = []
         for idx in 0..<ts.count {
-            let beginBeat = ts[idx]
-            let endBeat = idx + 1 < ts.count ? ts[idx + 1] : MusicTimeStamp.infinity
-            if beginBeat == endBeat {
+            let begin = ts[idx]
+            let end = idx + 1 < ts.count ? ts[idx + 1] : MusicTimeStampOfQuarters.infinity
+            if begin == end {
                 continue
             }
             
@@ -36,25 +36,28 @@ class TempoFromMIDIEventParser {
             var curTimeSignature = TimeSignature()
             
             for bpm in bpms {
-                if beginBeat >= bpm.0 {
+                if begin >= bpm.0 {
                     curBPM = bpm.1
                 }
             }
             
             for signature in signatures {
-                if beginBeat >= signature.0 {
+                if begin >= signature.0 {
                     curTimeSignature.beats = signature.1
                     curTimeSignature.noteTimeValue = signature.2
                 }
             }
             
-            let tempo = TempoInScore(tempo: Tempo(timeSignature: curTimeSignature, bpm: curBPM),
-                                     beginBeat: beginBeat, endBeat: endBeat)
+            // by default, midi timestamp is counted based on number of quarters
+//            let timeSignatureFactor = NoteTimeValueType.quarter / curTimeSignature.noteTimeValue
+            
+            let tempo = TempoEvent(tempo: Tempo(timeSignature: curTimeSignature, bpm: curBPM),
+                                     begin: begin, end: end)
             tmpResults.append(tempo)
         }
         
         // merge adjancent bmp changes when they have the same time signature
-        var finalResults: [TempoInScore] = []
+        var finalResults: [TempoEvent] = []
         var idx = 0
         while idx < tmpResults.count {
             // scan next tempos when they have the same time signature
@@ -66,9 +69,9 @@ class TempoFromMIDIEventParser {
             }
             
             // merge tempos
-            tempo.endBeat = tmpResults[idxNext - 1].endBeat
+            tempo.end = tmpResults[idxNext - 1].end
             for i in idx..<idxNext {
-                tempo.innerBPM.append((tmpResults[i].beginBeat, tmpResults[i].tempo.bpm))
+                tempo.innerBPM.append((tmpResults[i].begin, tmpResults[i].tempo.bpm))
             }
             finalResults.append(tempo)
             
@@ -82,8 +85,8 @@ class TempoFromMIDIEventParser {
     
     /// get all beat per minute changes
     /// - Returns [ (change time, beat per minute) ]
-    private func getBPMs(events: [TimedMIDIEvent]) -> [(MusicTimeStamp, Float64)] {
-        var results: [(MusicTimeStamp, Float64)] = []
+    private func getBPMs(events: [TimedMIDIEvent]) -> [(MusicTimeStampOfQuarters, Float64)] {
+        var results: [(MusicTimeStampOfQuarters, Float64)] = []
         
         for event in events {
             if event.eventType == kMusicEventType_ExtendedTempo {
@@ -98,8 +101,8 @@ class TempoFromMIDIEventParser {
     
     /// get all signatures such as (4/4) (3/8)
     /// - Returns [ (change time of this signature, beat per measure, beat note type) ]
-    private func getSignature(events: [TimedMIDIEvent]) -> [(MusicTimeStamp, Int, NoteTimeValueType)] {
-        var results: [(MusicTimeStamp, Int, NoteTimeValueType)] = []
+    private func getSignature(events: [TimedMIDIEvent]) -> [(MusicTimeStampOfQuarters, Int, NoteTimeValueType)] {
+        var results: [(MusicTimeStampOfQuarters, Int, NoteTimeValueType)] = []
         
         for event in events {
             /// FF 58 04 nn dd cc bb Time Signature

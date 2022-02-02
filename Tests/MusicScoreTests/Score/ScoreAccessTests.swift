@@ -4,57 +4,10 @@
 //  Copyright © 2022 live77. All rights reserved.
 
 import XCTest
+import MusicSymbol
 import MusicScore
 
-class MusicScoreTests: XCTestCase {
-    
-    /// test read music score basic info
-    func testScoreLoad1() {
-        let score = ScoreSamples.spring1st
-
-        /// music part
-        XCTAssertEqual(score.musicParts.count, 2)
-        XCTAssertNotNil(score.musicPartOf(instrument: .piano))
-        XCTAssertNotNil(score.musicPartOf(instrument: .violin))
-
-        /// tempo changes
-        XCTAssertEqual(score.tempos.count, 1)
-        XCTAssertEqual(score.tempos[0].timeSignature.beats, 4)
-        XCTAssertEqual(score.tempos[0].timeSignature.noteTimeValue, .quarter)
-    }
-    
-    /// test read music score basic info
-    func testScoreLoad2() {
-        let score = ScoreSamples.chopin92
-        
-        XCTAssertEqual(score.musicParts.count, 1)
-        XCTAssertNotNil(score.musicPartOf(instrument: .piano))
-        
-        XCTAssertEqual(score.tempos[0].timeSignature.beats, 1)
-        XCTAssertEqual(score.tempos[0].timeSignature.noteTimeValue, .eighth)
-        
-        XCTAssertEqual(score.tempos[1].timeSignature.beats, 12)
-        XCTAssertEqual(score.tempos[1].timeSignature.noteTimeValue, .eighth)
-        XCTAssertEqual(score.tempos[1].beginBeat, 0.5)
-        
-        // tempo
-        for idx in 0..<score.tempos.count - 1 {
-            XCTAssertEqual(score.tempos[idx].endBeat, score.tempos[idx + 1].beginBeat)
-        }
-    }
-    
-    /// test read music score basic info
-    func testScoreLoad3() {
-        let score = ScoreSamples.sonataPathetique
-        
-        XCTAssertEqual(score.musicParts.count, 1)
-        XCTAssertNotNil(score.musicPartOf(instrument: .piano))
-        
-        let pianoPart = score.musicPartOf(instrument: .piano)!
-        XCTAssertEqual(73, pianoPart.measures.count)
-        
-        print(pianoPart.measures[0])
-    }
+class ScoreAccessTests: XCTestCase {
     
     /// test read music score , note name is correct?
     func testReadNoteName1() {
@@ -67,6 +20,16 @@ class MusicScoreTests: XCTestCase {
         print(score.musicParts[0].notes[0].description)
 
         XCTAssertEqual(score.musicParts[0].notes[0].beats, 2)
+    }
+    
+    /// test read note and check its tempo
+    func testReadNoteTempo1() {
+        let score = ScoreSamples.spring1st
+        
+        for note in score.musicParts[0].notes {
+            XCTAssertEqual(note.tempo.timeSignature, "4/4")
+            XCTAssertEqual(note.tempo.bpm, 120)
+        }
     }
     
     /// test read measures
@@ -116,8 +79,8 @@ class MusicScoreTests: XCTestCase {
         let score = ScoreSamples.chopin92
         
         XCTAssertEqual(score.musicParts[0].measures[0].description, """
-measure: 0, [0.0, 0.5), tempo: [0.000, 0.500) 🎼1/8 bpm:60
-[0.000-0.500) 🎵A♯4 1/16 beats:0.500 duration:0.500 ⬇️65 ⬆️0
+measure: 0, [0.0, 1.0)
+[0.000-1.000) 🎵A♯4 1/8 beats:1.000 duration:1.000 ⬇️65 ⬆️0
 """)
         
         print("#musicParts: ", score.musicParts.count)
@@ -128,7 +91,7 @@ measure: 0, [0.0, 0.5), tempo: [0.000, 0.500) 🎼1/8 bpm:60
         XCTAssertEqual(score.musicParts[0].measures[0].notes.count, 1)
         
         print("first measure: ", score.musicParts[0].measures[1])
-        XCTAssertEqual(score.musicParts[0].measures[1].notes.count, 64)
+        XCTAssertEqual(score.musicParts[0].measures[1].notes.count, 30)
     }
     
     func testSpring1stCorrectness() {
@@ -146,14 +109,4 @@ measure: 0, [0.0, 0.5), tempo: [0.000, 0.500) 🎼1/8 bpm:60
         print(score)
     }
     
-    func testScoreLoadFromURL() {
-        let score = MusicScore(url: ScoreSamples.url_spring1st)!
-        print(score)
-    }
-
-    /// test score description
-    func testScoreDesc() {
-        let score = ScoreSamples.chopin92
-        print(score)
-    }
 }

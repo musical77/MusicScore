@@ -14,9 +14,6 @@ public struct MusicScore {
     /// all voice part in this score
     public var musicParts : [MusicPart] = []
     
-    /// tempo
-    public var tempos : [TempoInScore] = []
-    
     ///
     public init?(url: URL) {
         guard let midi = MIDISequence(url: url) else {
@@ -29,8 +26,8 @@ public struct MusicScore {
         logger.info("\(url.description) music sound tracks without meta: \(midi.getNumberOfSoundTracks())")
 
         // extract tempos
-        self.tempos = tempoParser.getTempoInScores(midi)
-        for tempo in tempos {
+        let tempoEvents = tempoParser.getTempoInScores(midi)
+        for tempo in tempoEvents {
             logger.info("tempo: \(tempo)")
         }
 
@@ -38,7 +35,7 @@ public struct MusicScore {
         for idx in 0..<(midi.getNumberOfSoundTracks()) {
             let events = midi.getTrackEvents(trackIndex: idx)
             let part = MusicPart(id: MusicPartID(idx), named: self.name + "_\(idx)",
-                                 with: self.tempos, midiEvents: events)
+                                 with: tempoEvents, midiEvents: events)
             
             // skip empty track
             if part.notes.isEmpty {
@@ -56,7 +53,7 @@ public struct MusicScore {
     private var midi: MIDISequence
     
     private var logger = Logger(subsystem: "MusicScore", category: "MusicScore")
-    private var tempoParser = TempoFromMIDIEventParser()
+    private var tempoParser = TempoEventParser()
 }
 
 

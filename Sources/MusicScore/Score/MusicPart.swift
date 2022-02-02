@@ -22,9 +22,6 @@ public struct MusicPart {
     /// notes , sorted in time asc order
     public var notes: [NoteInScore] = []
     
-    /// tempos
-    public var tempos: [TempoInScore] = []
-    
     /// measures, sorted in order
     public var measures: [Measure] = []
     
@@ -53,8 +50,7 @@ extension MusicPart {
     /// cut this MusicPart
     public mutating func cut(beginBeat: MusicTimeStamp, endBeat: MusicTimeStamp) {
         self.notes = notes.filter({ $0.beginBeat >= beginBeat && $0.beginBeat < endBeat })
-        self.tempos = tempos.filter({ $0.beginBeat >= beginBeat && $0.beginBeat < endBeat })
-        self.measures = MusicPart.getMeasures(notes: self.notes, with: self.tempos, maxBeat: endBeat)
+        self.measures = MusicPart.getMeasures(notes: self.notes)
     }
 }
 
@@ -67,14 +63,13 @@ extension MusicPart {
     /// - parameter midiEvents
     init(id: MusicPartID,
          named name: String,
-         with tempos: [TempoInScore],
+         with tempos: [TempoEvent],
          midiEvents: [TimedMIDIEvent]) {
         self.init()
         
         self.id = id
         self.meta = MusicPartMeta(name: name,
                                   instrument: metaParser.getInstrument(midiEvents: midiEvents))
-        self.tempos = tempos
                 
         var notes: [NoteInScore] = []
         for event in midiEvents {
@@ -82,8 +77,11 @@ extension MusicPart {
                 // get tempo of this note
                 let tempo = MusicPart.getTempo(ts: event.eventTimeStamp, with: tempos)!
                 
+                // time signature factor, TODO , now we assume tempo.timeSignature is fixed
+                let factor = NoteTimeValue(type: .quarter) / tempo.timeSignature.noteTimeValue
+                
                 // midiNote.duration is beats this note lasts
-                let timeValue = tempo.timeSignature.noteTimeValue * Double(midiNote.duration)
+                let timeValue = tempo.timeSignature.noteTimeValue * (Double(midiNote.duration) * factor)
                 let note = Note(pitch: Pitch(integerLiteral: Int(midiNote.note)),
                                 timeValue: timeValue!)
                 
@@ -91,15 +89,14 @@ extension MusicPart {
                                               tempo: tempo,
                                               pressVelocity: midiNote.velocity,
                                               releaseVelocity: midiNote.releaseVelocity,
-                                              beginBeat: event.eventTimeStamp)
+                                              beginBeat: event.eventTimeStamp * factor)
                 
                 notes.append(noteInScore)
             }
         }
         
         self.notes = notes
-        let maxBeat = notes.map { $0.beginBeat + $0.beats }.max() ?? 0
-        self.measures = MusicPart.getMeasures(notes: notes, with: tempos, maxBeat: maxBeat)
+        self.measures = MusicPart.getMeasures(notes: notes)
     }
 }
 
@@ -107,9 +104,9 @@ extension MusicPart {
 extension MusicPart {
     
     /// get tempo
-    private static func getTempo(ts: MusicTimeStamp, with tempos: [TempoInScore]) -> Tempo? {
+    private static func getTempo(ts: MusicTimeStampOfQuarters, with tempos: [TempoEvent]) -> Tempo? {
         for tempo in tempos {
-            if ts >= tempo.beginBeat && ts < tempo.endBeat {
+            if ts >= tempo.begin && ts < tempo.end {
                 return tempo.getTempo(at: ts)
             }
         }
@@ -117,37 +114,31 @@ extension MusicPart {
     }
     
     /// get measures
-    private static func getMeasures(notes: [NoteInScore],
-                                    with tempos: [TempoInScore],
-                                    maxBeat: MusicTimeStamp) -> [Measure] {
+    private static func getMeasures(notes: [NoteInScore]) -> [Measure] {
         var measures : [Measure] = []
         var idx = 0
-        for tempoIdx in 0..<tempos.count {
-            let tempo = tempos[tempoIdx]
-            let beginBeat = tempo.beginBeat
-            let endBeat = min(maxBeat, tempo.endBeat)
-            
-            let beatPerMeasure = Double(tempo.tempo.timeSignature.beats)
-            var newBeatBegin = beginBeat
-            while newBeatBegin < endBeat - 1e-6 {
-                measures.append(Measure(index: idx, notes: [],
-                                        beginBeat: newBeatBegin,
-                                        endBeat: min(newBeatBegin + beatPerMeasure, endBeat),
-                                        tempo: tempo))
-                idx = idx + 1
-                newBeatBegin = newBeatBegin + beatPerMeasure
-            }
-        }
         
-        // for each measure, find event 
-        for measureIdx in 0..<measures.count {
-            for event in notes {
-                let position = event.beginBeat
-                if position >= measures[measureIdx].beginBeat &&
-                    position < measures[measureIdx].endBeat {
-                    measures[measureIdx].notes.append(event)
-                }
+        var beginBeat = 0.0
+        var endBeat = 0.0
+        while idx < notes.count {
+            let firstNote = notes[idx]
+            let tempo = firstNote.tempo
+            beginBeat = endBeat
+            endBeat = beginBeat + Double(tempo.timeSignature.beats)
+            
+            var nextIdx = idx
+            var notesInMeasure: [NoteInScore] = []
+            while nextIdx < notes.count && notes[nextIdx].beginBeat < endBeat {
+                notesInMeasure.append(notes[nextIdx])
+                nextIdx = nextIdx + 1
             }
+            
+            measures.append(Measure(index: measures.count,
+                                    notes: notesInMeasure,
+                                    beginBeat: beginBeat,
+                                    endBeat: endBeat))
+            
+            idx = nextIdx
         }
         
         return measures
