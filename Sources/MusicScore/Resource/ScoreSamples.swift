@@ -24,6 +24,10 @@ public class ScoreSamples {
         return MusicScore(url: url_sonataPathetique)!
     }
     
+    static public var dreamingTrumerei: MusicScore {
+        return MusicScore(url: url_dreamingTrumerei)!
+    }
+    
     /// url
     
     static public var url_salutdAmour: URL {
@@ -44,5 +48,8 @@ public class ScoreSamples {
         return Bundle.module.url(forResource: "Sonata_Pathetique", withExtension: "mid")!
     }
 
+    static public var url_dreamingTrumerei: URL {
+        return Bundle.module.url(forResource: "Schumann-Kinderszenen-No.7_Op.15-Dreaming_Trumerei", withExtension: "mid")!
+    }
 }
 

@@ -49,6 +49,13 @@ class ScoreLoadTests: XCTestCase {
         print(pianoPart.measures[0])
     }
     
+    /// test read music score
+    func testScoreLoad4() {
+        let score = ScoreSamples.dreamingTrumerei
+        
+        XCTAssertEqual(score.numberOfMeasures, 33)
+    }
+    
    
     func testScoreLoadFromURL() {
         let score = MusicScore(url: ScoreSamples.url_spring1st)!

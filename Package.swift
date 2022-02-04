@@ -30,6 +30,7 @@ let package = Package(
                 .copy("Resource/sample/Salut_dAmour_Loves_Greeting_Op._12.mid"),
                 .copy("Resource/sample/Chopin_-_Nocturne_Op_9_No_2_E_Flat_Major.mid"),
                 .copy("Resource/sample/Sonata_Pathetique.mid"),
+                .copy("Resource/sample/Schumann-Kinderszenen-No.7_Op.15-Dreaming_Trumerei.mid"),
             ]
         ),
         .testTarget(
