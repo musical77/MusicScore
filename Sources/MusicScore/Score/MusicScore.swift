@@ -86,6 +86,20 @@ public extension MusicScore {
         return newScore
     }
     
+    /// return MusicScore in [beginBeat, endBeat)
+    func subset(beginBeat: MusicTimeStamp, endBeat: MusicTimeStamp) -> MusicScore {
+        var newScore = self
+        for idx in 0..<newScore.musicParts.count {
+            newScore.musicParts[idx].notes = musicParts[idx].notes.filter {
+                $0.beginBeat >= beginBeat && $0.beginBeat < endBeat
+            }
+            newScore.musicParts[idx].measures = musicParts[idx].measures.filter {
+                $0.beginBeat >= beginBeat && $0.beginBeat < endBeat ||
+                $0.endBeat >= beginBeat && $0.endBeat < endBeat
+            }
+        }
+        return newScore
+    }
 }
 
 /// string ext
