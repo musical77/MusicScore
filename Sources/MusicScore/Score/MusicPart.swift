@@ -43,86 +43,15 @@ extension MusicPart {
     /// - parameter tempos
     /// - parameter midiEvents
     init(id: MusicPartID,
-         named name: String,
-         with tempos: [TempoEvent],
-         midiEvents: [TimedMIDIEvent]) {
-        self.init()
+        name: String,
+        instrument: InstrumentType,
+        notes: [NoteInScore],
+        measures: [Measure]) {
         
         self.id = id
-        self.meta = MusicPartMeta(name: name,
-                                  instrument: metaParser.getInstrument(midiEvents: midiEvents))
-                
-        var notes: [NoteInScore] = []
-        for event in midiEvents {
-            if let midiNote = event.midiNoteMessage {
-                // get tempo of this note
-                let tempo = MusicPart.getTempo(ts: event.eventTimeStamp, with: tempos)!
-                
-                // time signature factor, TODO , now we assume tempo.timeSignature is fixed
-                let factor = NoteTimeValue(type: .quarter) / tempo.timeSignature.noteTimeValue
-                
-                // midiNote.duration is beats this note lasts
-                let timeValue = tempo.timeSignature.noteTimeValue * (Double(midiNote.duration) * factor)
-                let note = Note(pitch: Pitch(integerLiteral: Int(midiNote.note)),
-                                timeValue: timeValue!)
-                
-                let noteInScore = NoteInScore(note: note,
-                                              tempo: tempo,
-                                              pressVelocity: midiNote.velocity,
-                                              releaseVelocity: midiNote.releaseVelocity,
-                                              beginBeat: event.eventTimeStamp * factor)
-                
-                notes.append(noteInScore)
-            }
-        }
-        
+        self.meta = MusicPartMeta(name: name, instrument: instrument)
         self.notes = notes
-        self.measures = MusicPart.getMeasures(notes: notes)
-    }
-}
-
-
-extension MusicPart {
-    
-    /// get tempo
-    private static func getTempo(ts: MusicTimeStampOfQuarters, with tempos: [TempoEvent]) -> Tempo? {
-        for tempo in tempos {
-            if ts >= tempo.begin && ts < tempo.end {
-                return tempo.getTempo(at: ts)
-            }
-        }
-        return nil
-    }
-    
-    /// get measures
-    private static func getMeasures(notes: [NoteInScore]) -> [Measure] {
-        var measures : [Measure] = []
-        var idx = 0
-        
-        var beginBeat = 0.0
-        var endBeat = 0.0
-        while idx < notes.count {
-            let firstNote = notes[idx]
-            let tempo = firstNote.tempo
-            beginBeat = endBeat
-            endBeat = beginBeat + Double(tempo.timeSignature.beats)
-            
-            var nextIdx = idx
-            var notesInMeasure: [NoteInScore] = []
-            while nextIdx < notes.count && notes[nextIdx].beginBeat < endBeat {
-                notesInMeasure.append(notes[nextIdx])
-                nextIdx = nextIdx + 1
-            }
-            
-            measures.append(Measure(index: measures.count,
-                                    notes: notesInMeasure,
-                                    beginBeat: beginBeat,
-                                    endBeat: endBeat))
-            
-            idx = nextIdx
-        }
-        
-        return measures
+        self.measures = measures
     }
 }
 

@@ -14,7 +14,7 @@ public struct MusicScore {
     /// all voice part in this score
     public var musicParts : [MusicPart] = []
     
-    ///
+    /// init from url (midi file url)
     public init?(url: URL) {
         guard let midi = MIDISequence(url: url) else {
             logger.error("failed to load midi sequence from \(url.description)")
@@ -32,20 +32,7 @@ public struct MusicScore {
         }
 
         // extract music parts
-        for idx in 0..<(midi.getNumberOfSoundTracks()) {
-            let events = midi.getTrackEvents(trackIndex: idx)
-            let part = MusicPart(id: MusicPartID(idx), named: self.name + "_\(idx)",
-                                 with: tempoEvents, midiEvents: events)
-            
-            // skip empty track
-            if part.notes.isEmpty {
-                logger.warning("track \(idx), has no note events, skip it")
-                continue
-            }
-            
-            self.musicParts.append(part)
-            logger.info("track \(idx), has notes: \(part.notes.count), instr: \(part.meta.instrument.description)")
-        }
+        self.musicParts = scoreParser.getMusicParts(midi: midi)
     }
     
     // MARK: private
@@ -53,6 +40,7 @@ public struct MusicScore {
     private var midi: MIDISequence
     
     private var logger = Logger(subsystem: "MusicScore", category: "MusicScore")
+    private var scoreParser = ScoreParser()
     private var tempoParser = TempoEventParser()
 }
 
