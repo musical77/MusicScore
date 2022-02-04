@@ -35,25 +35,6 @@ public struct MusicPart {
     private var metaParser = MusicPartMetaFromMIDIEventParser()
 }
 
-extension MusicPart {
-    
-    /// return given measure
-    public subscript(idx: Int) -> Measure {
-        return measures[idx]
-    }
-    
-    /// return notes in [beginBeat, endBeat)
-    public subscript(beginBeat: MusicTimeStamp, endBeat: MusicTimeStamp) -> [NoteInScore] {
-        return notes.filter({ $0.beginBeat >= beginBeat && $0.beginBeat < endBeat })
-    }
-    
-    /// cut this MusicPart
-    public mutating func cut(beginBeat: MusicTimeStamp, endBeat: MusicTimeStamp) {
-        self.notes = notes.filter({ $0.beginBeat >= beginBeat && $0.beginBeat < endBeat })
-        self.measures = MusicPart.getMeasures(notes: self.notes)
-    }
-}
-
 // MARK: conv init
 extension MusicPart {
     

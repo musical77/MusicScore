@@ -84,15 +84,20 @@ public extension MusicScore {
     }
 }
 
-/// cut
+/// subset
 public extension MusicScore {
     
-    /// 
-    mutating func cut(beginBeat: MusicTimeStamp, endBeat: MusicTimeStamp) {
-        for idx in 0..<self.musicParts.count {
-            musicParts[idx].cut(beginBeat: beginBeat, endBeat: endBeat)
+    /// return MusicScore in [beginMeasureIdx, endMeasureIdx)
+    func subset(beginMeasureIdx: Int, endMeasureIdx: Int) -> MusicScore {
+        var newScore = self
+        for idx in 0..<newScore.musicParts.count {
+            let measures = Array<Measure>(self.musicParts[idx].measures[beginMeasureIdx..<endMeasureIdx])
+            newScore.musicParts[idx].measures = measures
+            newScore.musicParts[idx].notes = measures.flatMap { $0.notes }
         }
+        return newScore
     }
+    
 }
 
 /// string ext

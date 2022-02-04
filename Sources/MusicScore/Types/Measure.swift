@@ -30,7 +30,7 @@ extension Measure {
     }
     
     /// return notes in idx beat in this measure
-    public subscript(idx: Int) -> [NoteInScore] {
+    public func notes(inBeat idx: Int) -> [NoteInScore] {
         let localBeginBeat = beginBeat + Double(idx)
         let localEndBeat = localBeginBeat + 1
         return notes.filter { $0.beginBeat >= localBeginBeat && $0.beginBeat < localEndBeat }
@@ -38,7 +38,7 @@ extension Measure {
 }
 
 
-
+/// 
 extension Measure: CustomStringConvertible {
     public var description: String {
         var result = "measure: \(index), [\(beginBeat), \(endBeat))\n"

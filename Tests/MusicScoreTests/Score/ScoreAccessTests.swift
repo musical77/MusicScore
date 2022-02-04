@@ -52,26 +52,16 @@ class ScoreAccessTests: XCTestCase {
         print(score.musicPartOf(instrument: .piano)!.measures[1])
     }
     
-    /// test music part subscript
+    /// test music part access measures
     func testMusicPartSubscript() {
         let score = ScoreSamples.sonataPathetique
         
         let part = score.musicPartOf(instrument: .piano)!
         
-        XCTAssertEqual(part[0].beats, 2)
-        XCTAssertEqual(part[0][0].count, 6)
-        print(part[0])
-        print(part[1])
-    }
-    
-    /// test music score subscript
-    func testMusicPartSubscript2() {
-        let score = ScoreSamples.sonataPathetique
-        
-        let part = score.musicPartOf(instrument: .piano)!
-        
-        let notes = part[0.0, 1.0]
-        print(notes)
+        XCTAssertEqual(part.measures[0].beats, 2)
+        XCTAssertEqual(part.measures[0].notes(inBeat: 0).count, 6)
+        print(part.measures[0])
+        print(part.measures[1])
     }
 
     /// test description
