@@ -69,3 +69,15 @@ extension NoteInScore: CustomStringConvertible {
     }
 }
 
+/// hashable
+extension NoteInScore: Hashable {
+    public static func == (lhs: NoteInScore, rhs: NoteInScore) -> Bool {
+        return lhs.beginBeat == rhs.beginBeat && lhs.note == rhs.note
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(beginBeat)
+        hasher.combine(note.pitch.rawValue)
+        hasher.combine(note.timeValue.rawValue)
+    }
+}
