@@ -65,9 +65,9 @@ class ScoreParser {
                 // time signature factor, TODO: now we assume tempo.timeSignature is fixed
                 let factor = NoteTimeValue(type: .quarter) / tempo.timeSignature.noteTimeValue
                 
-                // midiNote.duration is beats this note lasts
+                // midiNote.duration is beats this note lasts, TODO implement preferSharps
                 let timeValue = tempo.timeSignature.noteTimeValue * (Double(midiNote.duration) * factor)
-                let note = Note(pitch: Pitch(integerLiteral: Int(midiNote.note)),
+                let note = Note(pitch: Pitch(midiNote: Int(midiNote.note), preferSharps: true),
                                 timeValue: timeValue!)
                 
                 let noteInScore = NoteInScore(note: note,

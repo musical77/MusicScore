@@ -91,4 +91,9 @@ Here shows the first 2 measures of this masterpiece.
 <img width="644" alt="截屏2022-02-02 下午5 46 22" src="https://user-images.githubusercontent.com/51254187/152130287-c7873c82-c2e6-431a-b6ff-d13afb1d9fdc.png">
 
 
+Reference
+---
 
+MIDI FILE Format
+
+http://www.music.mcgill.ca/~ich/classes/mumt306/StandardMIDIfileformat.html
