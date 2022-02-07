@@ -48,11 +48,8 @@ class TempoEventExtractor {
                 }
             }
             
-            // by default, midi timestamp is counted based on number of quarters
-//            let timeSignatureFactor = NoteTimeValueType.quarter / curTimeSignature.noteTimeValue
-            
             let tempo = TempoEvent(tempo: Tempo(timeSignature: curTimeSignature, bpm: curBPM),
-                                     begin: begin, end: end)
+                                   begin: begin, end: end)
             tmpResults.append(tempo)
         }
         

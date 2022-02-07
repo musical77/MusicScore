@@ -18,7 +18,7 @@ class MIDIScoreParser {
         var result = MusicScore()
         result.name = url.lastPathComponent
         logger.info("\(url.description) music sound tracks without meta: \(midi.getNumberOfSoundTracks())")
-
+        
         // extract music parts
         result.musicParts = getMusicParts(midi: midi)
         return result
@@ -34,7 +34,7 @@ class MIDIScoreParser {
 extension MIDIScoreParser {
     
     private func getMusicParts(midi: MIDISequence) -> [MusicPart] {
-        // extract tempos
+        // 1.0 extract tempo events
         let tempoEvents = tempoParser.getTempoInScores(midi)
         for tempo in tempoEvents {
             logger.info("tempo: \(tempo)")
@@ -69,7 +69,7 @@ extension MIDIScoreParser {
             let name = instrument.description + "_\(idx)"
             let measures = getMeasures(notes: notes, ranges: ranges)
             let part = MusicPart(id: idx, name: name, instrument: instrument, notes: notes, measures: measures)
-                        
+            
             result.append(part)
             logger.info("track \(idx), has notes: \(part.notes.count), instr: \(part.meta.instrument.description)")
         }
@@ -79,7 +79,7 @@ extension MIDIScoreParser {
     
     /// get notes in a track
     private func getNotes(tempos: [TempoEvent],
-                  midiEvents: [TimedMIDIEvent]) -> [NoteInScore] {
+                          midiEvents: [TimedMIDIEvent]) -> [NoteInScore] {
         
         var notes: [NoteInScore] = []
         for event in midiEvents {
@@ -108,7 +108,8 @@ extension MIDIScoreParser {
         return notes
     }
     
-    /// get tempo
+    /// get tempo at given timestamp
+    /// - Parameter ts music time stamp of quarters
     private func getTempo(ts: MusicTimeStampOfQuarters, with tempos: [TempoEvent]) -> Tempo? {
         for tempo in tempos {
             if ts >= tempo.begin && ts < tempo.end {
@@ -143,6 +144,7 @@ extension MIDIScoreParser {
         return measureRanges
     }
     
+    /// get measures based on all notes and ranges
     private func getMeasures(notes: [NoteInScore], ranges: [(MusicTimeStamp, MusicTimeStamp)]) -> [Measure] {
         var measures: [Measure] = []
         
@@ -156,5 +158,5 @@ extension MIDIScoreParser {
         return measures
     }
     
- 
+    
 }
