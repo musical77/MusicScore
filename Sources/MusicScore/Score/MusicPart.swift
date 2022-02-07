@@ -32,7 +32,6 @@ public struct MusicPart {
     
     /// private
     private var logger = Logger(subsystem: "MusicScore", category: "MusicPart")
-    private var metaParser = MusicPartMetaFromMIDIEventParser()
 }
 
 // MARK: conv init

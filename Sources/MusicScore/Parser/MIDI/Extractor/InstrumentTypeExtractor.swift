@@ -24,7 +24,7 @@ public extension InstrumentType {
     }
 }
 
-class MusicPartMetaFromMIDIEventParser {
+class InstrumentTypeExtractor {
     func getInstrument(midiEvents: [TimedMIDIEvent]) -> InstrumentType {
         for event in midiEvents {
             if let channelMessage = event.midiChannelMessage {
@@ -33,19 +33,13 @@ class MusicPartMetaFromMIDIEventParser {
 //                    logger.debug("\(event.eventTimeStamp.asMusicTimeDescription), found instrument: \(programNumber)")
                     return InstrumentType(programNumber: programNumber)
                 }
-                
-//                if let pedalStatus = channelMessage.pedalStatus {
-//                    logger.info("found pedal status: \(event.eventTimeStamp.asMusicTimeDescription), \(pedalStatus)")
-//                }
             }
         }
         return .unknown
     }
     
-    private var logger = Logger(subsystem: "MusicScore", category: "MusicPartMetaParser")
+    private var logger = Logger(subsystem: "MusicScore", category: "InstrumentTypeExtractor")
 }
-
-
 
 /**
  Instrument Map

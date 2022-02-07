@@ -16,32 +16,19 @@ public struct MusicScore {
     
     /// init from url (midi file url)
     public init?(url: URL) {
-        guard let midi = MIDISequence(url: url) else {
-            logger.error("failed to load midi sequence from \(url.description)")
+        if let score = scoreParser.getMusicScore(url: url) {
+            self = score
+        } else {
             return nil
         }
-        
-        self.name = url.lastPathComponent
-        self.midi = midi
-        logger.info("\(url.description) music sound tracks without meta: \(midi.getNumberOfSoundTracks())")
-
-        // extract tempos
-        let tempoEvents = tempoParser.getTempoInScores(midi)
-        for tempo in tempoEvents {
-            logger.info("tempo: \(tempo)")
-        }
-
-        // extract music parts
-        self.musicParts = scoreParser.getMusicParts(midi: midi)
     }
     
+    public init() {}
+    
     // MARK: private
-    
-    private var midi: MIDISequence
-    
+        
     private var logger = Logger(subsystem: "MusicScore", category: "MusicScore")
-    private var scoreParser = ScoreParser()
-    private var tempoParser = TempoEventParser()
+    private var scoreParser = MIDIScoreParser()
 }
 
 

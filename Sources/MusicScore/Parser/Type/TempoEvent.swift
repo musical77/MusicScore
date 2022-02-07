@@ -1,5 +1,5 @@
 //
-//  TempoChange.swift
+//  TempoEvent.swift
 //  
 
 import Foundation

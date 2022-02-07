@@ -1,4 +1,4 @@
-//  ScoreParser.swift
+//  MIDIScoreParser.swift
 //
 //  Created by lively77 on 2022/2/4.
 
@@ -6,9 +6,34 @@ import os
 import Foundation
 import MusicSymbol
 
-class ScoreParser {
+class MIDIScoreParser {
     
-    func getMusicParts(midi: MIDISequence) -> [MusicPart] {
+    /// load a music score from midi file url
+    public func getMusicScore(url: URL) -> MusicScore? {
+        guard let midi = MIDISequence(url: url) else {
+            logger.error("failed to load midi sequence from \(url.description)")
+            return nil
+        }
+        
+        var result = MusicScore()
+        result.name = url.lastPathComponent
+        logger.info("\(url.description) music sound tracks without meta: \(midi.getNumberOfSoundTracks())")
+
+        // extract music parts
+        result.musicParts = getMusicParts(midi: midi)
+        return result
+    }
+    
+    private let tempoParser = TempoEventExtractor()
+    private let metaParser = InstrumentTypeExtractor()
+    
+    private let logger = Logger(subsystem: "MusicScore", category: "MIDIScoreParser")
+    
+}
+
+extension MIDIScoreParser {
+    
+    private func getMusicParts(midi: MIDISequence) -> [MusicPart] {
         // extract tempos
         let tempoEvents = tempoParser.getTempoInScores(midi)
         for tempo in tempoEvents {
@@ -53,7 +78,7 @@ class ScoreParser {
     }
     
     /// get notes in a track
-    func getNotes(tempos: [TempoEvent],
+    private func getNotes(tempos: [TempoEvent],
                   midiEvents: [TimedMIDIEvent]) -> [NoteInScore] {
         
         var notes: [NoteInScore] = []
@@ -131,9 +156,5 @@ class ScoreParser {
         return measures
     }
     
-    private let tempoParser = TempoEventParser()
-    private let metaParser = MusicPartMetaFromMIDIEventParser()
-    
-    private let logger = Logger(subsystem: "MusicScore", category: "MIDIScoreParser")
-    
+ 
 }

@@ -5,7 +5,7 @@ import MusicSymbol
 import AudioToolbox
 
 /// TempoEventParser
-class TempoEventParser {
+class TempoEventExtractor {
     
     /// extract tempo infos from MIDISequence
     func getTempoInScores(_ midi: MIDISequence) -> [TempoEvent] {
@@ -83,6 +83,11 @@ class TempoEventParser {
     
     /// privates
     
+    private var logger = Logger(subsystem: "MusicScore", category: "TempoParser")
+}
+
+
+extension TempoEventExtractor {
     /// get all beat per minute changes
     /// - Returns [ (change time, beat per minute) ]
     private func getBPMs(events: [TimedMIDIEvent]) -> [(MusicTimeStampOfQuarters, Float64)] {
@@ -132,9 +137,5 @@ class TempoEventParser {
         
         return results
     }
-    
-    private var logger = Logger(subsystem: "MusicScore", category: "TempoParser")
 }
-
-
 
