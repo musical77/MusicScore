@@ -9,11 +9,11 @@ class TempoEventExtractor {
     
     /// extract tempo infos from MIDISequence
     func getTempoInScores(_ midi: MIDISequence) -> [TempoEvent] {
-        let tempoEvents = midi.getTempoTrackEvents()
+        let midiEvents = midi.getTempoTrackEvents()
         
         // get bmp changes and signuature changes, sort in asc order
-        var bpms = getBPMs(events: tempoEvents)
-        var signatures = getSignature(events: tempoEvents)
+        var bpms = getBPMs(events: midiEvents)
+        var signatures = getTimeSignatures(events: midiEvents)
         bpms.sort(by: { $0.0 < $1.0 })
         signatures.sort(by: { $0.0 < $1.0 })
         
@@ -101,9 +101,9 @@ extension TempoEventExtractor {
         return results
     }
     
-    /// get all signatures such as (4/4) (3/8)
+    /// get all time signatures such as (4/4) (3/8)
     /// - Returns [ (change time of this signature, beat per measure, beat note type) ]
-    private func getSignature(events: [TimedMIDIEvent]) -> [(MusicTimeStampOfQuarters, Int, NoteTimeValueType)] {
+    private func getTimeSignatures(events: [TimedMIDIEvent]) -> [(MusicTimeStampOfQuarters, Int, NoteTimeValueType)] {
         var results: [(MusicTimeStampOfQuarters, Int, NoteTimeValueType)] = []
         
         for event in events {

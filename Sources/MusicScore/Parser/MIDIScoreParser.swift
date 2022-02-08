@@ -5,6 +5,7 @@
 import os
 import Foundation
 import MusicSymbol
+import MidiParser
 
 class MIDIScoreParser {
     

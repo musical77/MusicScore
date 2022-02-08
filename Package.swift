@@ -18,13 +18,14 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         .package(name: "MusicSymbol", url: "https://github.com/musical77/MusicSymbol.git", .branch("main")),
+        .package(name: "MidiParser", url: "https://github.com/musical77/MidiParser.git", .branch("master")),
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .target(
             name: "MusicScore",
-            dependencies: ["MusicSymbol"],
+            dependencies: ["MusicSymbol", "MidiParser"],
             resources: [
                 .copy("Resource/sample/Beethoven_-_Violin_Sonata_No.5_Op.24_Spring_movement_I._Allegro.mid"),
                 .copy("Resource/sample/Salut_dAmour_Loves_Greeting_Op._12.mid"),
