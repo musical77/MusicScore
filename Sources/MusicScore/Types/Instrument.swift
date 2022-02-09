@@ -1,112 +1,186 @@
 //
-//  InstrumentTypes.swift
+//  InstrumentType and InstrumentFamily.swift
 //
+//  Created by Yuma Matsune on 2018/02/03.
+//  Copyright © 2018年 matsune. All rights reserved.
 
 import Foundation
 
 /// instrument
 public enum InstrumentType : Int {
+    // 0-7 PIANO
+    case acousticGrand
+    case brightAcoustic
+    case electricGrand
+    case honkyTonk
+    case electricPiano1
+    case electricPiano2
+    case harpsichord
+    case clavinet
+    // 8-15 CHROMATIC PERCUSSION
+    case celesta
+    case glockenspiel
+    case musicBox
+    case vibraphone
+    case marimba
+    case xylophone
+    case tubularBells
+    case dulcimer
+    // 16-23 ORGAN
+    case drawbarOrgan
+    case percussiveOrgan
+    case rockOrgan
+    case churchOrgan
+    case reedOrgan
+    case accordion
+    case harmonica
+    case rangoAccordian
+    // 24-31 GUITAR
+    case acousticGuitarNylon
+    case acousticGuitarSteel
+    case electricGuitarJazz
+    case electricGuitarClean
+    case electricGuitarMuted
+    case overdrivenGuitar
+    case distortionGuitar
+    case guitarHarmonics
+    // 32-39 BASS
+    case acousticBass
+    case electricBassFinger
+    case electricBassPick
+    case fretlessBass
+    case slapBass1
+    case slapBass2
+    case synthBass1
+    case synthBass2
+    // 40-47 STRINGS
+    case violin
+    case viola
+    case cello
+    case contrabass
+    case tremoloStrings
+    case pizzicatoStrings
+    case orchestralStrings
+    case timpani
+    // 48-55 ENSEMBLE
+    case stringEnsemble1
+    case stringEnsemble2
+    case synthStrings1
+    case synthStrings2
+    case choirAahs
+    case voiceOohs
+    case synthVoice
+    case orchestraHit
+    // 56-63 BRASS
+    case trumpet
+    case trombone
+    case tuba
+    case mutedTrumpet
+    case frenchHorn
+    case brassSection
+    case synthBrass1
+    case synthBrass2
+    // 64-71 REED
+    case sopranoSax
+    case altoSax
+    case tenorSax
+    case baritoneSax
+    case oboe
+    case englishHorn
+    case bassoon
+    case clarinet
+    // 72-79 PIPE
+    case piccolo
+    case flute
+    case recorder
+    case panFlute
+    case blownBottle
+    case skakuhachi
+    case whistle
+    case ocarina
+    // 80-87 SYNTH LEAD
+    case lead1square
+    case lead2sawtooth
+    case lead3calliope
+    case lead4chiff
+    case lead5charang
+    case lead6voice
+    case lead7fifths
+    case lead8basslead
+    // 88-95 SYNTH PAD
+    case pad1newage
+    case pad2warm
+    case pad3polysynth
+    case pad4choir
+    case pad5bowed
+    case pad6metallic
+    case pad7halo
+    case pad8sweep
+    // 96-103 SYNTH EFFECTS
+    case FX1Rain
+    case FX2Soundtrack
+    case FX3Crystal
+    case FX4Atmosphere
+    case FX5Brightness
+    case FX6Goblins
+    case FX7Echoes
+    case FX8Scifi
+    // 104-111 ETHNIC
+    case sitar
+    case banjo
+    case shamisen
+    case koto
+    case kalimba
+    case bagpipe
+    case fiddle
+    case shanai
+    // 112-119 PERCUSSIVE
+    case tinkleBell
+    case agogo
+    case steelDrums
+    case woodblock
+    case taikoDrum
+    case melodicTom
+    case synthDrum
+    case reverseCymbal
+    // 120-127 SOUND EFFECTS
+    case guitarFretNoise
+    case breathNoise
+    case seashore
+    case birdTweet
+    case telephoneRing
+    case helicopter
+    case applause
+    case gunshot
     
-    /// unknown
-    case unknown = -1
-    
-    case piano = 100
-    
-    /// Tubular Bells, (as conduct part of piano)
-    case tubular_bells = 101
-
-    /// 
-    case violin = 200
-    
-    /// Glockenspiel (as conduct part of violin)
-    case glock = 201
+    case unknown = 1000
 }
 
-extension InstrumentType: CustomStringConvertible {
-    
-    public var description: String {
-        switch self {
-        case .piano:
-            return "piano"
-        case .violin:
-            return "violin"
-        case .glock:
-            return "glock"
-        case .tubular_bells:
-            return "tubular_bells"
-        default:
-            return "unknown"
-        }
+extension InstrumentType {
+    var family: InstrumentFamily {
+        return InstrumentFamily(rawValue: self.rawValue / 8) ?? .unknown
     }
 }
 
-/**
- Instrument Map
- PC#    Instrument    PC#    Instrument
- 1.    Acoustic Grand Piano    65.    Soprano Sax
- 2.    Bright Acoustic Piano    66.    Alto Sax
- 3.    Electric Grand Piano    67.    Tenor Sax
- 4.    Honky-tonk Piano    68.    Baritone Sax
- 5.    Electric Piano 1 (Rhodes Piano)    69.    Oboe
- 6.    Electric Piano 2 (Chorused Piano)    70.    English Horn
- 7.    Harpsichord    71.    Bassoon
- 8.    Clavinet    72.    Clarinet
- 9.    Celesta    73.    Piccolo
- 10.    Glockenspiel    74.    Flute
- 11.    Music Box    75.    Recorder
- 12.    Vibraphone    76.    Pan Flute
- 13.    Marimba    77.    Blown Bottle
- 14.    Xylophone    78.    Shakuhachi
- 15.    Tubular Bells    79.    Whistle
- 16.    Dulcimer (Santur)    80.    Ocarina
- 17.    Drawbar Organ (Hammond)    81.    Lead 1 (square wave)
- 18.    Percussive Organ    82.    Lead 2 (sawtooth wave)
- 19.    Rock Organ    83.    Lead 3 (calliope)
- 20.    Church Organ    84.    Lead 4 (chiffer)
- 21.    Reed Organ    85.    Lead 5 (charang)
- 22.    Accordion (French)    86.    Lead 6 (voice solo)
- 23.    Harmonica    87.    Lead 7 (fifths)
- 24.    Tango Accordion (Band neon)    88.    Lead 8 (bass + lead)
- 25.    Acoustic Guitar (nylon)    89.    Pad 1 (new age Fantasia)
- 26.    Acoustic Guitar (steel)    90.    Pad 2 (warm)
- 27.    Electric Guitar (jazz)    91.    Pad 3 (polysynth)
- 28.    Electric Guitar (clean)    92.    Pad 4 (choir space voice)
- 29.    Electric Guitar (muted)    93.    Pad 5 (bowed glass)
- 30.    Overdriven Guitar    94.    Pad 6 (metallic pro)
- 31.    Distortion Guitar    95.    Pad 7 (halo)
- 32.    Guitar harmonics    96.    Pad 8 (sweep)
- 33.    Acoustic Bass    97.    FX 1 (rain)
- 34.    Electric Bass (fingered)    98.    FX 2 (soundtrack)
- 35.    Electric Bass (picked)    99.    FX 3 (crystal)
- 36.    Fretless Bass    100.    FX 4 (atmosphere)
- 37.    Slap Bass 1    101.    FX 5 (brightness)
- 38.    Slap Bass 2    102.    FX 6 (goblins)
- 39.    Synth Bass 1    103.    FX 7 (echoes, drops)
- 40.    Synth Bass 2    104.    FX 8 (sci-fi, star theme)
- 41.    Violin    105.    Sitar
- 42.    Viola    106.    Banjo
- 43.    Cello    107.    Shamisen
- 44.    Contrabass    108.    Koto
- 45.    Tremolo Strings    109.    Kalimba
- 46.    Pizzicato Strings    110.    Bag pipe
- 47.    Orchestral Harp    111.    Fiddle
- 48.    Timpani    112.    Shanai
- 49.    String Ensemble 1 (strings)    113.    Tinkle Bell
- 50.    String Ensemble 2 (slow strings)    114.    Agogo
- 51.    SynthStrings 1    115.    Steel Drums
- 52.    SynthStrings 2    116.    Woodblock
- 53.    Choir Aahs    117.    Taiko Drum
- 54.    Voice Oohs    118.    Melodic Tom
- 55.    Synth Voice    119.    Synth Drum
- 56.    Orchestra Hit    120.    Reverse Cymbal
- 57.    Trumpet    121.    Guitar Fret Noise
- 58.    Trombone    122.    Breath Noise
- 59.    Tuba    123.    Seashore
- 60.    Muted Trumpet    124.    Bird Tweet
- 61.    French Horn    125.    Telephone Ring
- 62.    Brass Section    126.    Helicopter
- 63.    SynthBrass 1    127.    Applause
- 64.    SynthBrass 2    128.    Gunshot
- */
 
-
+// instrument Family
+public enum InstrumentFamily: Int {
+    case piano
+    case percussion
+    case organ
+    case guitar
+    case bass
+    case strings
+    case ensemble
+    case brass
+    case reed
+    case pipe
+    case synthLead
+    case synthPad
+    case synthEffects
+    case ethnic
+    case percussive
+    case soundEffects
+    
+    case unknown = 1000
+}

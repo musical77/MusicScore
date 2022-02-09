@@ -2,44 +2,23 @@
 import os
 import Foundation
 import MusicSymbol
-
-/// instrument type
-public extension InstrumentType {
-    
-    /// from midi program number
-    init(programNumber: Int) {
-        self = .unknown
-        if programNumber == 40 { /// violin
-            self = .violin
-        }
-        if programNumber == 0 || programNumber == 1 { /// piano
-            self = .piano
-        }
-        if programNumber == 14 {
-            self = .tubular_bells
-        }
-        if programNumber == 9 {
-            self = .glock
-        }
-    }
-}
-
-class InstrumentTypeExtractor {
-    func getInstrument(midiEvents: [TimedMIDIEvent]) -> InstrumentType {
-        for event in midiEvents {
-            if let channelMessage = event.midiChannelMessage {
-//                logger.debug("\(event.eventTimeStamp.asMusicTimeDescription), status: \(channelMessage.status)")
-                if let programNumber = channelMessage.programChange {
-//                    logger.debug("\(event.eventTimeStamp.asMusicTimeDescription), found instrument: \(programNumber)")
-                    return InstrumentType(programNumber: programNumber)
-                }
-            }
-        }
-        return .unknown
-    }
-    
-    private var logger = Logger(subsystem: "MusicScore", category: "InstrumentTypeExtractor")
-}
+//
+//class InstrumentTypeExtractor {
+//    func getInstrument(midiEvents: [TimedMIDIEvent]) -> InstrumentType {
+//        for event in midiEvents {
+//            if let channelMessage = event.midiChannelMessage {
+////                logger.debug("\(event.eventTimeStamp.asMusicTimeDescription), status: \(channelMessage.status)")
+//                if let programNumber = channelMessage.programChange {
+////                    logger.debug("\(event.eventTimeStamp.asMusicTimeDescription), found instrument: \(programNumber)")
+//                    return InstrumentType(programNumber: programNumber)
+//                }
+//            }
+//        }
+//        return .unknown
+//    }
+//    
+//    private var logger = Logger(subsystem: "MusicScore", category: "InstrumentTypeExtractor")
+//}
 
 /**
  Instrument Map

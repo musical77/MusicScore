@@ -13,6 +13,6 @@ class MIDIScoreParserTests : XCTestCase {
     func testScoreLoadFromURL() {
        
         let score1 = MIDIScoreParser().loadMusicScore(url: ScoreSamples.url_spring1st)!
-        print(score1)
+        print(score1.musicParts[2])
     }
 }

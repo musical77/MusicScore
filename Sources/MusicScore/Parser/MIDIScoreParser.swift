@@ -12,20 +12,20 @@ public class MIDIScoreParser {
     public init() {}
     
     /// load a music score from midi file url
-    public func getMusicScore(url: URL) -> MusicScore? {
-        guard let midi = MIDISequence(url: url) else {
-            logger.error("failed to load midi sequence from \(url.description)")
-            return nil
-        }
-        
-        var result = MusicScore()
-        result.name = url.lastPathComponent
-        logger.info("\(url.description) music sound tracks without meta: \(midi.getNumberOfSoundTracks())")
-        
-        // extract music parts
-        result.musicParts = getMusicParts(midi: midi)
-        return result
-    }
+//    public func getMusicScore(url: URL) -> MusicScore? {
+//        guard let midi = MIDISequence(url: url) else {
+//            logger.error("failed to load midi sequence from \(url.description)")
+//            return nil
+//        }
+//        
+//        var result = MusicScore()
+//        result.name = url.lastPathComponent
+//        logger.info("\(url.description) music sound tracks without meta: \(midi.getNumberOfSoundTracks())")
+//        
+//        // extract music parts
+//        result.musicParts = getMusicParts(midi: midi)
+//        return result
+//    }
     
     public func loadMusicScore(url: URL) -> MusicScore? {
         guard let data = try? Data(contentsOf: url) else {
@@ -44,7 +44,7 @@ public class MIDIScoreParser {
     }
     
     private let tempoParser = TempoEventExtractor()
-    private let metaParser = InstrumentTypeExtractor()
+//    private let metaParser = InstrumentTypeExtractor()
     
     private let logger = Logger(subsystem: "MusicScore", category: "MIDIScoreParser")
     
@@ -76,6 +76,7 @@ extension MIDIScoreParser {
         
         // get final music parts
         var result: [MusicPart] = []
+        var instrument = InstrumentType.unknown
         for idx in 0..<notesInTracks.count {
             let notes = notesInTracks[idx]
             
@@ -85,74 +86,66 @@ extension MIDIScoreParser {
                 continue
             }
             
-            // get instrument type
-            var instrument = InstrumentType.unknown
+            // get instrument type, if don't find instrument 
             if let midiPatch = midi.noteTracks[idx].patch {
-                switch midiPatch.family {
-                case .piano:
-                    instrument = .piano
-                case .strings:
-                    instrument = .violin
-                default:
-                    instrument = .unknown
-                }
+                instrument = InstrumentType(rawValue: Int(midiPatch.patch.rawValue))!
             }
-            let name = instrument.description + "_\(idx)"
+            let name = String(reflecting: instrument) + "_\(idx)"
             let measures = getMeasures(notes: notes, ranges: ranges)
             let part = MusicPart(id: idx, name: name, instrument: instrument, notes: notes, measures: measures)
             
             result.append(part)
-            logger.info("track \(idx), has notes: \(part.notes.count), instr: \(part.meta.instrument.description)")
+            logger.info("track \(idx), has notes: \(part.notes.count), instr: \(name),\(instrument.rawValue)")
         }
         
         return result
     }
     
-    private func getMusicParts(midi: MIDISequence) -> [MusicPart] {
-        // 1.0 extract tempo events
-        let bpms = tempoParser.getBPMs(events: midi.getTempoTrackEvents())
-        let signatures = tempoParser.getTimeSignatures(events: midi.getTempoTrackEvents())
-        let tempoChangeLogs = TempoChangeLog.mergeFrom(_bpms: bpms, _signatures: signatures)
-        for tempo in tempoChangeLogs {
-            logger.info("tempo: \(tempo)")
-        }
-        
-        // extract all notes in all music parts
-        var notesInTracks: [[NoteInScore]] = []
-        var allNotes: [NoteInScore] = []
-        for idx in 0..<(midi.getNumberOfSoundTracks()) {
-            let events = midi.getTrackEvents(trackIndex: idx)
-            let notes = getNotes(tempos: tempoChangeLogs, midiEvents: events)
-            notesInTracks.append(notes)
-            allNotes.append(contentsOf: notes)
-        }
-        
-        // get measure ranges
-        let ranges = getMeasureRanges(notes: allNotes)
-        
-        // get final music parts
-        var result: [MusicPart] = []
-        for idx in 0..<notesInTracks.count {
-            let notes = notesInTracks[idx]
-            
-            // skip empty track
-            if notes.isEmpty {
-                logger.warning("track \(idx), has no note events, skip it")
-                continue
-            }
-            
-            let events = midi.getTrackEvents(trackIndex: idx)
-            let instrument = metaParser.getInstrument(midiEvents: events)
-            let name = instrument.description + "_\(idx)"
-            let measures = getMeasures(notes: notes, ranges: ranges)
-            let part = MusicPart(id: idx, name: name, instrument: instrument, notes: notes, measures: measures)
-            
-            result.append(part)
-            logger.info("track \(idx), has notes: \(part.notes.count), instr: \(part.meta.instrument.description)")
-        }
-        
-        return result
-    }
+//    private func getMusicParts(midi: MIDISequence) -> [MusicPart] {
+//        // 1.0 extract tempo events
+//        let bpms = tempoParser.getBPMs(events: midi.getTempoTrackEvents())
+//        let signatures = tempoParser.getTimeSignatures(events: midi.getTempoTrackEvents())
+//        let tempoChangeLogs = TempoChangeLog.mergeFrom(_bpms: bpms, _signatures: signatures)
+//        for tempo in tempoChangeLogs {
+//            logger.info("tempo: \(tempo)")
+//        }
+//
+//        // extract all notes in all music parts
+//        var notesInTracks: [[NoteInScore]] = []
+//        var allNotes: [NoteInScore] = []
+//        for idx in 0..<(midi.getNumberOfSoundTracks()) {
+//            let events = midi.getTrackEvents(trackIndex: idx)
+//            let notes = getNotes(tempos: tempoChangeLogs, midiEvents: events)
+//            notesInTracks.append(notes)
+//            allNotes.append(contentsOf: notes)
+//        }
+//
+//        // get measure ranges
+//        let ranges = getMeasureRanges(notes: allNotes)
+//
+//        // get final music parts
+//        var result: [MusicPart] = []
+//        for idx in 0..<notesInTracks.count {
+//            let notes = notesInTracks[idx]
+//
+//            // skip empty track
+//            if notes.isEmpty {
+//                logger.warning("track \(idx), has no note events, skip it")
+//                continue
+//            }
+//
+//            let events = midi.getTrackEvents(trackIndex: idx)
+//            let instrument = metaParser.getInstrument(midiEvents: events)
+//            let name = instrument.description + "_\(idx)"
+//            let measures = getMeasures(notes: notes, ranges: ranges)
+//            let part = MusicPart(id: idx, name: name, instrument: instrument, notes: notes, measures: measures)
+//
+//            result.append(part)
+//            logger.info("track \(idx), has notes: \(part.notes.count), instr: \(part.meta.instrument.description)")
+//        }
+//
+//        return result
+//    }
     
     /// get notes in a track
     private func getNotes(tempos: [TempoChangeLog],

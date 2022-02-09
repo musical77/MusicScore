@@ -41,16 +41,25 @@ public extension MusicScore {
         }
     }
     
-    
-    func musicPartOf(instrument: InstrumentType) -> MusicPart? {
+    func musicPartOf(instrumentFamily: InstrumentFamily) -> [MusicPart] {
+        var results: [MusicPart] = []
         for part in musicParts {
-            if part.meta.instrument == instrument {
-                return part
+            if part.meta.instrument.family == instrumentFamily {
+                results.append(part)
             }
         }
-        return nil
+        return results
     }
     
+    func musicPartOf(instrument: InstrumentType) -> [MusicPart] {
+        var results: [MusicPart] = []
+        for part in musicParts {
+            if part.meta.instrument == instrument {
+                results.append(part)
+            }
+        }
+        return results
+    }
     
     var duration: MusicDuration {
         get {
