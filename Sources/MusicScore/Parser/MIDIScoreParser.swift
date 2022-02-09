@@ -7,7 +7,9 @@ import Foundation
 import MusicSymbol
 import MidiParser
 
-class MIDIScoreParser {
+public class MIDIScoreParser {
+    
+    public init() {}
     
     /// load a music score from midi file url
     public func getMusicScore(url: URL) -> MusicScore? {
@@ -36,6 +38,7 @@ class MIDIScoreParser {
         
         var result = MusicScore()
         result.name = url.lastPathComponent
+        result.musicParts = getMusicParts(midi: midi)
         
         return result
     }

@@ -16,7 +16,7 @@ public struct MusicScore {
     
     /// init from url (midi file url)
     public init?(url: URL) {
-        if let score = scoreParser.getMusicScore(url: url) {
+        if let score = scoreParser.loadMusicScore(url: url) {
             self = score
         } else {
             return nil
