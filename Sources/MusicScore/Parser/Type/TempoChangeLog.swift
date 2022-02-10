@@ -5,8 +5,10 @@
 import Foundation
 import MusicSymbol
 
+typealias MusicTimeStampOfQuarters = Float64
+
 /// tempo  [beginBeat, endBeat),  with a fixed tempo , and bpm changes
-public struct TempoChangeLog {
+struct TempoChangeLog {
     
     public init(tempo: Tempo,
                 begin: MusicTimeStampOfQuarters, end: MusicTimeStampOfQuarters,
@@ -47,26 +49,6 @@ extension TempoChangeLog {
             }
         }
         return result
-    }
-}
-
-
-extension Double {
-    
-    var as1DigitString: String {
-        return String(format: "%.1f", self)
-    }
-    
-    var as2DigitString: String {
-        return String(format: "%.2f", self)
-    }
-    
-    var as3DigitString: String {
-        return String(format: "%.3f", self)
-    }
-    
-    var as4DigitString: String {
-        return String(format: "%.4f", self)
     }
 }
 
@@ -146,5 +128,25 @@ extension TempoChangeLog {
         }
         
         return finalResults
+    }
+}
+
+/// double extension
+extension Double {
+    
+    var as1DigitString: String {
+        return String(format: "%.1f", self)
+    }
+    
+    var as2DigitString: String {
+        return String(format: "%.2f", self)
+    }
+    
+    var as3DigitString: String {
+        return String(format: "%.3f", self)
+    }
+    
+    var as4DigitString: String {
+        return String(format: "%.4f", self)
     }
 }
