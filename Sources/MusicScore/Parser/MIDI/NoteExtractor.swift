@@ -27,11 +27,13 @@ class NoteExtractor {
             let note = Note(pitch: Pitch(midiNote: Int(midiNote.note), preferSharps: true),
                             timeValue: timeValue!)
             
+            let performInfo = NotePerformInfo(pressVelocity: midiNote.velocity,
+                                              releaseVelocity: midiNote.releaseVelocity)
+            
             let noteInScore = NoteInScore(note: note,
                                           tempo: tempo,
-                                          pressVelocity: midiNote.velocity,
-                                          releaseVelocity: midiNote.velocity,
-                                          beginBeat: midiNote.regularTempoTimeStamp * factor)
+                                          beginBeat: midiNote.regularTempoTimeStamp * factor,
+                                          performInfo: performInfo)
             
             notes.append(noteInScore)
             

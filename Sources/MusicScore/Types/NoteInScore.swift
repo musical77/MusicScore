@@ -9,13 +9,12 @@ import MusicSymbol
 public struct NoteInScore {
     
     public init(note: Note, tempo: Tempo,
-                pressVelocity: UInt8, releaseVelocity: UInt8,
-                beginBeat: MusicTimeStamp) {
+                beginBeat: MusicTimeStamp,
+                performInfo: NotePerformInfo) {
         self.note = note
         self.tempo = tempo
-        self.pressVelocity = pressVelocity
-        self.releaseVelocity = releaseVelocity
         self.beginBeat = beginBeat
+        self.performInfo = performInfo
     }
     
     /// note
@@ -24,14 +23,11 @@ public struct NoteInScore {
     /// tempo of this note being played
     public var tempo: Tempo
 
-    /// press velocity
-    public var pressVelocity: UInt8
-
-    /// release velocity
-    public var releaseVelocity: UInt8
-
     /// position in time, measured in beats, begin
     public var beginBeat: MusicTimeStamp
+    
+    /// how to play this note 
+    public var performInfo: NotePerformInfo? = nil
 }
 
 extension NoteInScore {
@@ -64,8 +60,8 @@ extension NoteInScore {
 extension NoteInScore: CustomStringConvertible {
     public var description: String {
         return String(format: "[%.3f-%.3f)", beginBeat, endBeat) + " "
-            + "🎵\(note)" + " beats:\(beats.as3DigitString) duration:\(phyDuration.as3DigitString)" + " "
-            + "⬇️\(pressVelocity) ⬆️\(releaseVelocity)"
+        + "🎵\(note)" + " beats:\(beats.as3DigitString) duration:\(phyDuration.as3DigitString)" + " "
+        + "⬇️\(performInfo?.pressVelocity ?? 0) ⬆️\(performInfo?.releaseVelocity ?? 0)"
     }
 }
 

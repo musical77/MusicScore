@@ -70,7 +70,7 @@ class ScoreAccessTests: XCTestCase {
         
         XCTAssertEqual(score.musicParts[0].measures[0].description, """
 measure: 0, [0.0, 1.0)
-[0.000-1.000) 🎵A♯4 1/8 beats:1.000 duration:1.000 ⬇️65 ⬆️65
+[0.000-1.000) 🎵A♯4 1/8 beats:1.000 duration:1.000 ⬇️65 ⬆️0
 """)
         
         print("#musicParts: ", score.musicParts.count)
