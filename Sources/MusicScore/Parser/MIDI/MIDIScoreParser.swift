@@ -76,7 +76,7 @@ extension MIDIScoreParser {
             }
             let name = String(reflecting: instrument) + "_\(idx)"
             let measures = measureExtractor.getMeasures(notes: notes, ranges: ranges)
-            let part = MusicPart(id: idx, name: name, instrument: instrument, notes: notes, measures: measures)
+            let part = MusicPart(name: name, instrument: instrument, notes: notes, measures: measures)
             
             result.append(part)
             logger.info("track \(idx), has notes: \(part.notes.count), instr: \(name),\(instrument.rawValue)")

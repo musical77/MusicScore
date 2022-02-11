@@ -13,9 +13,6 @@ public typealias MusicPartID = Int
 /// Used to represent a voice part, an independent instrumental unit
 public struct MusicPart {
     
-    ///
-    var id: MusicPartID = 0
-    
     /// meta
     public var meta: MusicPartMeta = MusicPartMeta(name: "", instrument: .unknown)
     
@@ -36,18 +33,10 @@ public struct MusicPart {
 
 // MARK: conv init
 extension MusicPart {
-    
-    /// - parameter id
-    /// - parameter name
-    /// - parameter tempos
-    /// - parameter midiEvents
-    init(id: MusicPartID,
-        name: String,
-        instrument: InstrumentType,
-        notes: [NoteInScore],
-        measures: [Measure]) {
-        
-        self.id = id
+    init(name: String,
+         instrument: InstrumentType,
+         notes: [NoteInScore],
+         measures: [Measure]) {
         self.meta = MusicPartMeta(name: name, instrument: instrument)
         self.notes = notes
         self.measures = measures
@@ -61,13 +50,4 @@ extension MusicPart: CustomStringConvertible {
     }
 }
 
-// MARK: hash ext
-extension MusicPart: Hashable {
-    public static func == (lhs: MusicPart, rhs: MusicPart) -> Bool {
-        return lhs.id == rhs.id
-    }
-    
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-}
+
