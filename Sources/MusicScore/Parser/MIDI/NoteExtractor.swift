@@ -9,8 +9,7 @@ import MusicSymbol
 class NoteExtractor {
     
     /// extract note info from midi track
-    func getNotes(tempos: [TempoChangeLog],
-                  noteTrack: MidiNoteTrack) -> [NoteInScore] {
+    func getNotes(tempos: [TempoChangeLog], noteTrack: MidiNoteTrack) -> [NoteInScore] {
         
         var notes: [NoteInScore] = []
         for idx in noteTrack.startIndex..<noteTrack.endIndex {
