@@ -4,15 +4,19 @@
 
 import Foundation
 import MusicSymbol
+import MidiParser
 
 /// represent a note in score , has its position info(beginBeat) , and its performance info(press and release velocity)
 public struct NoteInScore {
     
-    public init(note: Note, tempo: Tempo,
+    public init(note: Note,
+                tempo: Tempo,
+                keySignature: KeySignature,
                 beginBeat: MusicTimeStamp,
                 performInfo: NotePerformInfo) {
         self.note = note
         self.tempo = tempo
+        self.keySignature = keySignature
         self.beginBeat = beginBeat
         self.performInfo = performInfo
     }
@@ -22,6 +26,9 @@ public struct NoteInScore {
     
     /// tempo of this note being played
     public var tempo: Tempo
+    
+    /// key signature of this note
+    public var keySignature: KeySignature
 
     /// position in time, measured in beats, begin
     public var beginBeat: MusicTimeStamp

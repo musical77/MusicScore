@@ -1,4 +1,3 @@
-//
 //  KeySignatureExtractor.swift
 //  
 //

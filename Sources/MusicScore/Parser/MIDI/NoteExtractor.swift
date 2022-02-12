@@ -29,8 +29,11 @@ class NoteExtractor {
             let performInfo = NotePerformInfo(pressVelocity: midiNote.velocity,
                                               releaseVelocity: midiNote.releaseVelocity)
             
+            // TODO: get key signature
+            let key = KeySignature.major(.C)
             let noteInScore = NoteInScore(note: note,
                                           tempo: tempo,
+                                          keySignature: key,
                                           beginBeat: midiNote.regularTempoTimeStamp * factor,
                                           performInfo: performInfo)
             

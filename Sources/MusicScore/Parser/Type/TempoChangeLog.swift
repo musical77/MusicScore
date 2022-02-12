@@ -41,10 +41,10 @@ extension TempoChangeLog {
     }
     
     /// return tempo at given music timestamp
-    public func getTempo(at beat: MusicTimeStamp) -> Tempo {
+    public func getTempo(at ts: MusicTimeStampOfQuarters) -> Tempo {
         var result = tempo
         for bpm in innerBPM {
-            if beat >= bpm.0 {
+            if ts >= bpm.0 {
                 result.bpm = bpm.1
             }
         }
