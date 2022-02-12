@@ -24,9 +24,9 @@ class NoteExtractor {
             // time signature factor, TODO: now we assume tempo.timeSignature is fixed
             let factor = NoteTimeValue(type: .quarter) / tempo.timeSignature.noteTimeValue
             
-            // midiNote.duration is beats this note lasts, TODO implement preferSharps
+            // midiNote.duration is beats this note lasts
             let timeValue = tempo.timeSignature.noteTimeValue * (Double(midiNote.regularDuration) * factor)
-            let note = Note(pitch: Pitch(midiNote: Int(midiNote.note), preferSharps: true),
+            let note = Note(pitch: Pitch(midiNote: Int(midiNote.note), preferSharps: !keySign.isFlat),
                             timeValue: timeValue!)
             
             // get perform guidance
