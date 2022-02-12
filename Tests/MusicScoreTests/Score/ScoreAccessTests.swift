@@ -52,6 +52,22 @@ class ScoreAccessTests: XCTestCase {
         print(score.musicPartOf(instrument: .acousticGrand)[0].measures[1])
     }
     
+    /// test read key signatures
+    func testGetKeySignatures1() {
+        let score = ScoreSamples.chopin92
+        
+        XCTAssertEqual(score.musicPartOf(instrument: .acousticGrand)[0].measures[0].notes[0].keySignature,
+                       .major(.Eflat))
+    }
+    
+    /// test read key signatures
+    func testGetKeySignatures2() {
+        let score = ScoreSamples.spring1st
+        
+        XCTAssertEqual(score.musicPartOf(instrument: .acousticGrand)[0].measures[0].notes[0].keySignature,
+                       .major(.C))
+    }
+    
     /// test music part access measures
     func testMusicPartSubscript() {
         let score = ScoreSamples.sonataPathetique
@@ -100,4 +116,5 @@ measure: 0, [0.0, 1.0)
         print(score)
     }
     
+    ///
 }

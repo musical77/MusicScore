@@ -29,9 +29,11 @@ class NoteExtractor {
             let note = Note(pitch: Pitch(midiNote: Int(midiNote.note), preferSharps: true),
                             timeValue: timeValue!)
             
+            // get perform guidance
             let performInfo = NotePerformInfo(pressVelocity: midiNote.velocity,
                                               releaseVelocity: midiNote.releaseVelocity)
             
+            // wow, finally we got the note 
             let noteInScore = NoteInScore(note: note,
                                           tempo: tempo,
                                           keySignature: keySign,
