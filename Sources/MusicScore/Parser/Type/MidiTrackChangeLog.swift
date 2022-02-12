@@ -4,6 +4,7 @@
 
 import Foundation
 import MusicSymbol
+import MidiParser
 
 typealias MusicTimeStampOfQuarters = Float64
 
@@ -11,9 +12,12 @@ typealias MusicTimeStampOfQuarters = Float64
 struct MidiTrackChangeLog {
     
     public init(tempo: Tempo,
-                begin: MusicTimeStampOfQuarters, end: MusicTimeStampOfQuarters,
+                keySignature: KeySignature,
+                begin: MusicTimeStampOfQuarters,
+                end: MusicTimeStampOfQuarters,
                 innerBPM: [(MusicTimeStampOfQuarters, Float64)] = []) {
         self.tempo = tempo
+        self.keySignature = keySignature
         self.begin = begin
         self.end = end
         self.innerBPM = innerBPM
@@ -21,7 +25,10 @@ struct MidiTrackChangeLog {
     
     /// tempo
     public var tempo: Tempo
-
+    
+    /// key signature
+    public var keySignature: KeySignature
+    
     /// begin timestamp of this tempo affected
     public var begin: MusicTimeStampOfQuarters
     
@@ -53,24 +60,28 @@ extension MidiTrackChangeLog {
 }
 
 extension MidiTrackChangeLog: CustomStringConvertible {
-    /// [0.000, inf) 🎼4/4 bpm:120 
+    /// [0.000, inf) 🎼4/4 bpm:120
     public var description: String {
         return "[\(begin.as3DigitString), \(end.as3DigitString)) \(tempo)" + (innerBPM.count > 1 ?
-        " " + innerBPM.map { "(\($0.0.as3DigitString) bpm: \(Int($0.1)))"}.joined(separator: ",") : "")
+                                                                              " " + innerBPM.map { "(\($0.0.as3DigitString) bpm: \(Int($0.1)))"}.joined(separator: ",") : "")
     }
 }
 
 /// get change logs
 extension MidiTrackChangeLog {
     static func mergeFrom(_bpms: [(MusicTimeStampOfQuarters, Float64)],
-                          _signatures: [(MusicTimeStampOfQuarters, Int, NoteTimeValueType)]) -> [MidiTrackChangeLog] {
+                          _signatures: [(MusicTimeStampOfQuarters, Int, NoteTimeValueType)],
+                          _keySignatures: [(MusicTimeStampOfQuarters, KeySignature)]) -> [MidiTrackChangeLog] {
         var bpms = _bpms
         var signatures = _signatures
+        var keySigns = _keySignatures
+        
         bpms.sort(by: { $0.0 < $1.0 })
         signatures.sort(by: { $0.0 < $1.0 })
+        keySigns.sort(by: { $0.0 < $1.0 })
         
         // merge timestamp together and sort
-        var ts = bpms.map { $0.0 } + signatures.map { $0.0 }
+        var ts = bpms.map { $0.0 } + signatures.map { $0.0 } + keySigns.map { $0.0 }
         ts.sort()
         
         // for each [ts[i], ts[i + 1]) , calculate its bmp and time signature
@@ -86,13 +97,16 @@ extension MidiTrackChangeLog {
             // bpm and current time signature
             var curBPM: Double = 0
             var curTimeSignature = TimeSignature()
+            var curKeySignature = KeySignature.major(.C)
             
+            // get bmp in current time window
             for bpm in bpms {
                 if begin >= bpm.0 {
                     curBPM = bpm.1
                 }
             }
             
+            // get tempo signature in current time window
             for signature in signatures {
                 if begin >= signature.0 {
                     curTimeSignature.beats = signature.1
@@ -100,8 +114,17 @@ extension MidiTrackChangeLog {
                 }
             }
             
+            // get key signature in current time window
+            for keySign in keySigns {
+                if begin >= keySign.0 {
+                    curKeySignature = keySign.1
+                }
+            }
+            
             let tempo = MidiTrackChangeLog(tempo: Tempo(timeSignature: curTimeSignature, bpm: curBPM),
-                                   begin: begin, end: end)
+                                           keySignature: curKeySignature,
+                                           begin: begin,
+                                           end: end)
             tmpResults.append(tempo)
         }
         
@@ -109,26 +132,28 @@ extension MidiTrackChangeLog {
         var finalResults: [MidiTrackChangeLog] = []
         var idx = 0
         while idx < tmpResults.count {
-            // scan next tempos when they have the same time signature
-            var tempo = tmpResults[idx]
+            // scan next tempos when they have the same time signature and key signature
+            var cur = tmpResults[idx]
             var idxNext = idx
             while idxNext < tmpResults.count &&
-                    tmpResults[idxNext].tempo.timeSignature == tempo.tempo.timeSignature {
+                    tmpResults[idxNext].tempo.timeSignature == cur.tempo.timeSignature &&
+                    tmpResults[idxNext].keySignature == cur.keySignature {
                 idxNext = idxNext + 1
             }
             
             // merge tempos
-            tempo.end = tmpResults[idxNext - 1].end
+            cur.end = tmpResults[idxNext - 1].end
             for i in idx..<idxNext {
-                tempo.innerBPM.append((tmpResults[i].begin, tmpResults[i].tempo.bpm))
+                cur.innerBPM.append((tmpResults[i].begin, tmpResults[i].tempo.bpm))
             }
-            finalResults.append(tempo)
+            finalResults.append(cur)
             
             idx = idxNext
         }
         
         return finalResults
     }
+    
 }
 
 /// double extension

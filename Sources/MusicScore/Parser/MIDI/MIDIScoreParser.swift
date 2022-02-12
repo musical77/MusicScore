@@ -30,6 +30,7 @@ public class MIDIScoreParser {
     private let tempoExtractor = TempoExtractor()
     private let noteExtractor = NoteExtractor()
     private let measureExtractor = MeasureExtractor()
+    private let keySignExtractor = KeySignatureExtractor()
     
     private let logger = Logger(subsystem: "MusicScore", category: "MIDIScoreParser")
 }
@@ -40,17 +41,17 @@ extension MIDIScoreParser {
         // 1.0 extract tempo events
         let bpms = tempoExtractor.getBPMs(midi: midi)
         let signatures = tempoExtractor.getTimeSignatures(midi: midi)
-        let tempoChangeLogs = MidiTrackChangeLog.mergeFrom(_bpms: bpms, _signatures: signatures)
-        for tempo in tempoChangeLogs {
-            logger.info("tempo: \(tempo)")
-        }
         
         // extract all notes in all music parts
         var notesInTracks: [[NoteInScore]] = []
         var allNotes: [NoteInScore] = []
         for idx in 0..<midi.noteTracks.count {
             let noteTrack = midi.noteTracks[idx]
-            let notes = noteExtractor.getNotes(tempos: tempoChangeLogs, noteTrack: noteTrack)
+            let keySigns = keySignExtractor.getKeySignatures(noteTrack: midi.noteTracks[idx])
+            let midiChangeLogs = MidiTrackChangeLog.mergeFrom(
+                _bpms: bpms, _signatures: signatures, _keySignatures: keySigns)
+
+            let notes = noteExtractor.getNotes(logs: midiChangeLogs, noteTrack: noteTrack)
             notesInTracks.append(notes)
             allNotes.append(contentsOf: notes)
         }
