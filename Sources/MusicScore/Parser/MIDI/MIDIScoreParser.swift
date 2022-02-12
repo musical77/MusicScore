@@ -40,7 +40,7 @@ extension MIDIScoreParser {
         // 1.0 extract tempo events
         let bpms = tempoExtractor.getBPMs(midi: midi)
         let signatures = tempoExtractor.getTimeSignatures(midi: midi)
-        let tempoChangeLogs = TempoChangeLog.mergeFrom(_bpms: bpms, _signatures: signatures)
+        let tempoChangeLogs = MidiTrackChangeLog.mergeFrom(_bpms: bpms, _signatures: signatures)
         for tempo in tempoChangeLogs {
             logger.info("tempo: \(tempo)")
         }

@@ -9,7 +9,7 @@ import MusicSymbol
 class NoteExtractor {
     
     /// extract note info from midi track
-    func getNotes(tempos: [TempoChangeLog], noteTrack: MidiNoteTrack) -> [NoteInScore] {
+    func getNotes(tempos: [MidiTrackChangeLog], noteTrack: MidiNoteTrack) -> [NoteInScore] {
         
         var notes: [NoteInScore] = []
         for idx in noteTrack.startIndex..<noteTrack.endIndex {
@@ -46,7 +46,7 @@ class NoteExtractor {
     
     /// get tempo at given timestamp
     /// - Parameter ts music time stamp of quarters
-    func getTempo(ts: MusicTimeStampOfQuarters, with tempos: [TempoChangeLog]) -> Tempo? {
+    func getTempo(ts: MusicTimeStampOfQuarters, with tempos: [MidiTrackChangeLog]) -> Tempo? {
         for tempo in tempos {
             if ts >= tempo.begin && ts < tempo.end {
                 return tempo.getTempo(at: ts)

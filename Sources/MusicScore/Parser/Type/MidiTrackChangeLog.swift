@@ -8,7 +8,7 @@ import MusicSymbol
 typealias MusicTimeStampOfQuarters = Float64
 
 /// tempo  [beginBeat, endBeat),  with a fixed tempo , and bpm changes
-struct TempoChangeLog {
+struct MidiTrackChangeLog {
     
     public init(tempo: Tempo,
                 begin: MusicTimeStampOfQuarters, end: MusicTimeStampOfQuarters,
@@ -33,7 +33,7 @@ struct TempoChangeLog {
     
 }
 
-extension TempoChangeLog {
+extension MidiTrackChangeLog {
     
     /// time signature
     public var timeSignature: TimeSignature {
@@ -52,7 +52,7 @@ extension TempoChangeLog {
     }
 }
 
-extension TempoChangeLog: CustomStringConvertible {
+extension MidiTrackChangeLog: CustomStringConvertible {
     /// [0.000, inf) 🎼4/4 bpm:120 
     public var description: String {
         return "[\(begin.as3DigitString), \(end.as3DigitString)) \(tempo)" + (innerBPM.count > 1 ?
@@ -61,9 +61,9 @@ extension TempoChangeLog: CustomStringConvertible {
 }
 
 /// get change logs
-extension TempoChangeLog {
+extension MidiTrackChangeLog {
     static func mergeFrom(_bpms: [(MusicTimeStampOfQuarters, Float64)],
-                          _signatures: [(MusicTimeStampOfQuarters, Int, NoteTimeValueType)]) -> [TempoChangeLog] {
+                          _signatures: [(MusicTimeStampOfQuarters, Int, NoteTimeValueType)]) -> [MidiTrackChangeLog] {
         var bpms = _bpms
         var signatures = _signatures
         bpms.sort(by: { $0.0 < $1.0 })
@@ -74,7 +74,7 @@ extension TempoChangeLog {
         ts.sort()
         
         // for each [ts[i], ts[i + 1]) , calculate its bmp and time signature
-        var tmpResults: [TempoChangeLog] = []
+        var tmpResults: [MidiTrackChangeLog] = []
         for idx in 0..<ts.count {
             let begin = ts[idx]
             let end = idx + 1 < ts.count ? ts[idx + 1] : MusicTimeStampOfQuarters.infinity
@@ -100,13 +100,13 @@ extension TempoChangeLog {
                 }
             }
             
-            let tempo = TempoChangeLog(tempo: Tempo(timeSignature: curTimeSignature, bpm: curBPM),
+            let tempo = MidiTrackChangeLog(tempo: Tempo(timeSignature: curTimeSignature, bpm: curBPM),
                                    begin: begin, end: end)
             tmpResults.append(tempo)
         }
         
         // merge adjancent bmp changes when they have the same time signature
-        var finalResults: [TempoChangeLog] = []
+        var finalResults: [MidiTrackChangeLog] = []
         var idx = 0
         while idx < tmpResults.count {
             // scan next tempos when they have the same time signature
