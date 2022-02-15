@@ -16,13 +16,16 @@ class NoteExtractor {
             let midiNote = noteTrack[idx]
             
             // get tempo of this note
-            let tempo = getTempo(ts: midiNote.regularTempoTimeStamp, among: logs)!
+            var tempo = getTempo(ts: midiNote.regularTempoTimeStamp, among: logs)!
             
             // get key signature of this note
             let keySign = getKeySign(ts: midiNote.regularTempoTimeStamp, among: logs)!
             
-            // time signature factor, TODO: now we assume tempo.timeSignature is fixed
+            // time signature factor, TODO: now we assume tempo.timeSignature's noteTimeValue is fixed
             let factor = NoteTimeValue(type: .quarter) / tempo.timeSignature.noteTimeValue
+            
+            // adjust tempo bpm because in midi bpm is measured as quarter notes
+            tempo.bpm = tempo.bpm * factor
             
             // midiNote.duration is beats this note lasts
             let timeValue = tempo.timeSignature.noteTimeValue * (Double(midiNote.regularDuration) * factor)

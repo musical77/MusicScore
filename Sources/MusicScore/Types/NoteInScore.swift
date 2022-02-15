@@ -68,7 +68,8 @@ extension NoteInScore: CustomStringConvertible {
     public var description: String {
         return String(format: "[%.3f-%.3f)", beginBeat, endBeat) + " "
         + "🎵\(note)" + " beats:\(beats.as3DigitString) duration:\(phyDuration.as3DigitString)" + " "
-        + "⬇️\(performInfo?.pressVelocity ?? 0) ⬆️\(performInfo?.releaseVelocity ?? 0)"
+        + "⬇️\(performInfo?.pressVelocity ?? 0) ⬆️\(performInfo?.releaseVelocity ?? 0)" + " "
+        + "᭶" + "\(tempo.bpm.as1DigitString)" + " " + "\(tempo.timeSignature)"
     }
 }
 

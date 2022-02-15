@@ -32,6 +32,15 @@ class ScoreAccessTests: XCTestCase {
         }
     }
     
+    /// test read note tempo is correct
+    func testReadNoteTempo2() {
+        let score = ScoreSamples.chopin92
+        
+        XCTAssertEqual(score.musicParts[0].notes[0].tempo.timeSignature, "1/8")
+        XCTAssertEqual(score.musicParts[0].notes[1].tempo.timeSignature, "12/8")
+        XCTAssertEqual(score.musicParts[0].notes[0].tempo.bpm, 120)
+    }
+    
     /// test read measures
     func testGetMeasures1() {
         let score = ScoreSamples.spring1st
@@ -86,7 +95,7 @@ class ScoreAccessTests: XCTestCase {
         
         XCTAssertEqual(score.musicParts[0].measures[0].description, """
 measure: 0, [0.0, 1.0)
-[0.000-1.000) 🎵B♭4 1/8 beats:1.000 duration:1.000 ⬇️65 ⬆️0
+[0.000-1.000) 🎵B♭4 1/8 beats:1.000 duration:0.500 ⬇️65 ⬆️0 ᭶120.0 1/8
 """)
         
         print("#musicParts: ", score.musicParts.count)
@@ -111,9 +120,7 @@ measure: 0, [0.0, 1.0)
         
         print("first measure of the violin part: ", violinPart.measures[0])
         print("first measure of piano part: ", pianoPart.measures[0])
-        print("first note in violin part: ", violinPart.measures[0].notes[0])
-        
-        print(score)
+        print("first note in violin part: ", violinPart.measures[0].notes[0])        
     }
     
     ///
