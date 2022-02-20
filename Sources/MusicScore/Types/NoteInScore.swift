@@ -39,9 +39,14 @@ public struct NoteInScore {
 
 extension NoteInScore {
     
-    /// the duration for the note,
+    /// the duration for the note , in physical time
     public var phyDuration: PhysicalDuration {
         return tempo.duration(of: note)
+    }
+    
+    /// the duration of this note, measured in beats
+    public var duration: MusicDuration {
+        return tempo.beats(of: note)
     }
     
     /// beats
