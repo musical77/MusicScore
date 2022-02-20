@@ -21,17 +21,20 @@ public struct NoteInScore {
         self.performInfo = performInfo
     }
     
+    /// id
+    public let id = UUID()
+    
     /// note
-    public var note: Note
+    public let note: Note
     
     /// tempo of this note being played
-    public var tempo: Tempo
+    public let tempo: Tempo
     
     /// key signature of this note
-    public var keySignature: KeySignature
+    public let keySignature: KeySignature
 
     /// position in time, measured in beats, begin
-    public var beginBeat: MusicTimeStamp
+    public let beginBeat: MusicTimeStamp
     
     /// how to play this note 
     public var performInfo: NotePerformInfo? = nil
